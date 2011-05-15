@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<installation version="1.0">
+    <info>
+        <appname>JStickyNotes</appname>
+        <appversion>0.5</appversion>
+        <appsubpath>JStickyNotes</appsubpath>
+        <url>http://code.google.com/p/jstickynotes/</url>
+        <authors>
+            <author name="Jonatan Rico (jrico)" email="jnrico@gmail.com"/>
+        </authors>
+        <javaversion>1.6</javaversion>
+    </info>
+
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
+
+    <guiprefs width="600" height="480" resizable="no">
+        <modifier key="useButtonIcons" value="no"/>
+        <modifier key="useLabelIcons" value="yes"/>
+        <modifier key="useHeadingPanel" value="yes"/>
+        <modifier key="useHeadingForSummary" value="yes"/>
+        <modifier key="headingImageOnLeft" value="yes"/>
+        <modifier key="headingLineCount" value="2"/>
+        <modifier key="headingFontSize" value="1.5"/>
+        <modifier key="headingBackgroundColor" value="0x00ffffff"/>
+        <modifier key="headingPanelCounter" value="text"/>
+        <modifier key="headingPanelCounterPos" value="inHeading"/>
+    </guiprefs>
+
+    <panels>
+        <panel classname="HelloPanel"/>
+        <panel classname="LicencePanel"/>
+        <panel classname="TargetPanel"/>
+        <panel classname="ShortcutPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="InfoPanel"/>
+        <panel classname="SimpleFinishPanel"/>
+    </panels>
+
+    <packs>
+        <pack name="JStickyNotes" required="yes" installGroups="JStickyNotes" >
+            <description>JStickyNotes</description>
+            <singlefile src="dist/JStickyNotes.jar" target="$INSTALL_PATH/JStickyNotes.jar"/>
+            <singlefile src="bin/JStickyNotes" target="$INSTALL_PATH/bin/JStickyNotes"/>
+            <singlefile src="lib/forms.jar" target="$INSTALL_PATH/lib/forms.jar"/>
+            <singlefile src="lib/imap.jar" target="$INSTALL_PATH/lib/imap.jar"/>
+            <singlefile src="lib/mailapi.jar" target="$INSTALL_PATH/lib/mailapi.jar"/>
+            <singlefile src="src/jrico/jstickynotes/resource/icons/icon32.ico" target="$INSTALL_PATH/icons/icon32.ico"/>
+            <singlefile src="src/jrico/jstickynotes/resource/icons/icon32.png" target="$INSTALL_PATH/icons/icon32.png"/>
+            <singlefile src="src/jrico/jstickynotes/resource/license/gpl-2.0.txt" target="$INSTALL_PATH"/>
+            <singlefile src="src/jrico/jstickynotes/resource/release/ReleaseNotes.txt" target="$INSTALL_PATH"/>
+            <parsable targetfile="$INSTALL_PATH/bin/JStickyNotes"/>
+            <executable targetfile="$INSTALL_PATH/bin/JStickyNotes" stage="never"/>
+        </pack>
+    </packs>
+
+    <resources>
+        <res id="Heading.image" src="src/jrico/jstickynotes/resource/icons/icon48.png" />
+        <res id="LicencePanel.licence" src="src/jrico/jstickynotes/resource/license/gpl-2.0.txt"/>
+        <res id="InfoPanel.info" src="src/jrico/jstickynotes/resource/release/ReleaseNotes.txt"/>
+        <res src="winShortcut.xml" id="shortcutSpec.xml"/>
+        <res src="unixShortcut.xml" id="Unix_shortcutSpec.xml"/>
+    </resources>
+
+    <native type="izpack" name="ShellLink.dll"/>
+
+</installation>

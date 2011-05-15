@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<shortcuts>
+
+    <skipIfNotSupported/>
+
+    <programGroup defaultName="JStickyNotes"
+      location="applications"/>
+
+    <shortcut
+      name="JStickyNotes"
+      programGroup="yes"
+      desktop="yes"
+      applications="no"
+      startMenu="no"
+      startup="no"
+      target="$INSTALL_PATH/bin/JStickyNotes"
+      commandLine=""
+      initialState="noShow"
+      iconFile="$INSTALL_PATH/icons/icon32.png"
+      iconIndex="0"
+      workingDirectory=""
+      type="Application"
+      encoding="UTF-8"
+      description="Launch JStickyNotes">
+    </shortcut>
+
+    <shortcut
+      name="Uninstall"
+      programGroup="yes"
+      desktop="no"
+      applications="no"
+      startMenu="no"
+      startup="no"
+      target="java"
+      commandLine="-jar &quot;$INSTALL_PATH/Uninstaller/uninstaller.jar&quot;"
+      initialState="noShow"
+      iconFile=""
+      iconIndex="0"
+      workingDirectory=""
+      type="Application"
+      encoding="UTF-8"
+      description="Uninstall JStickyNotes">
+   </shortcut>
+
+</shortcuts>
+

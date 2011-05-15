@@ -1,0 +1,2 @@
+#!/bin/bash
+java -cp $INSTALL_PATH/JStickyNotes.jar:$INSTALL_PATH/lib/forms.jar:$INSTALL_PATH/lib/imap.jar:$INSTALL_PATH/lib/mailapi.jar jrico.jstickynotes.JStickyNotes
