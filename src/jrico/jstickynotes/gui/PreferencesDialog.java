@@ -77,8 +77,7 @@ public class PreferencesDialog extends JDialog {
     }
 
     private void fontButtonActionPerformed(ActionEvent e) {
-        Pair<Font, Color> pair = FontChooser.showDialog(null, fontLabel
-                .getFont(), fontLabel.getForeground());
+        Pair<Font, Color> pair = FontChooser.showDialog(null, fontLabel.getFont(), fontLabel.getForeground());
         if (pair != null) {
             fontLabel.setFont(pair.getObjectA());
             fontLabel.setForeground(pair.getObjectB());
@@ -86,9 +85,7 @@ public class PreferencesDialog extends JDialog {
     }
 
     private void colorButtonActionPerformed(ActionEvent e) {
-        Color color = JColorChooser.showDialog(null,
-                "JStickyNotes - Choose color", preferences
-                        .getDefaultNoteColor());
+        Color color = JColorChooser.showDialog(null, "JStickyNotes - Choose color", preferences.getDefaultNoteColor());
         if (color != null) {
             colorLabel.setBackground(color);
         }
@@ -125,27 +122,25 @@ public class PreferencesDialog extends JDialog {
         fontLabel = new JLabel();
         CellConstraints cc = new CellConstraints();
 
-        //======== this ========
+        // ======== this ========
         setModal(true);
         setTitle(bundle.getString("PreferencesDialog.this.title"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
-        //======== dialogPane ========
+        // ======== dialogPane ========
         {
             dialogPane.setBorder(Borders.DIALOG_BORDER);
             dialogPane.setLayout(new BorderLayout());
 
-            //======== buttonBar ========
+            // ======== buttonBar ========
             {
                 buttonBar.setBorder(null);
-                buttonBar.setLayout(new FormLayout(
-                    "$glue, $button, $rgap, $button",
-                    "$ugap, default, $ugap, pref"));
+                buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "$ugap, default, $ugap, pref"));
                 buttonBar.add(buttonsSeparator, cc.xywh(1, 2, 4, 1));
 
-                //---- okButton ----
+                // ---- okButton ----
                 okButton.setText(bundle.getString("PreferencesDialog.okButton.text"));
                 okButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -154,7 +149,7 @@ public class PreferencesDialog extends JDialog {
                 });
                 buttonBar.add(okButton, cc.xy(2, 4));
 
-                //---- cancelButton ----
+                // ---- cancelButton ----
                 cancelButton.setText(bundle.getString("PreferencesDialog.cancelButton.text"));
                 cancelButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -165,24 +160,24 @@ public class PreferencesDialog extends JDialog {
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
 
-            //======== preferencesTabbedPane ========
+            // ======== preferencesTabbedPane ========
             {
 
-                //======== generalScroll ========
+                // ======== generalScroll ========
                 {
 
-                    //======== generalPanel ========
+                    // ======== generalPanel ========
                     {
                         generalPanel.setBorder(Borders.TABBED_DIALOG_BORDER);
-                        generalPanel.setLayout(new FormLayout(
-                            "2*($button, $lcgap), default:grow",
+                        generalPanel.setLayout(new FormLayout("2*($button, $lcgap), default:grow",
                             "default, $ugap, fill:default, $lgap, fill:default"));
 
-                        //---- generalDescriptionLabel ----
-                        generalDescriptionLabel.setText(bundle.getString("PreferencesDialog.generalDescriptionLabel.text"));
+                        // ---- generalDescriptionLabel ----
+                        generalDescriptionLabel.setText(bundle
+                            .getString("PreferencesDialog.generalDescriptionLabel.text"));
                         generalPanel.add(generalDescriptionLabel, cc.xywh(1, 1, 5, 1));
 
-                        //---- colorButton ----
+                        // ---- colorButton ----
                         colorButton.setText(bundle.getString("PreferencesDialog.colorButton.text"));
                         colorButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
@@ -192,7 +187,7 @@ public class PreferencesDialog extends JDialog {
                         generalPanel.add(colorButton, cc.xy(1, 3));
                         generalPanel.add(colorLabel, cc.xy(3, 3));
 
-                        //---- fontButton ----
+                        // ---- fontButton ----
                         fontButton.setText(bundle.getString("PreferencesDialog.fontButton.text"));
                         fontButton.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
@@ -201,13 +196,14 @@ public class PreferencesDialog extends JDialog {
                         });
                         generalPanel.add(fontButton, cc.xy(1, 5));
 
-                        //---- fontLabel ----
+                        // ---- fontLabel ----
                         fontLabel.setText(bundle.getString("PreferencesDialog.fontLabel.text"));
                         generalPanel.add(fontLabel, cc.xywh(3, 5, 3, 1));
                     }
                     generalScroll.setViewportView(generalPanel);
                 }
-                preferencesTabbedPane.addTab(bundle.getString("PreferencesDialog.generalPanel.tab.title"), generalScroll);
+                preferencesTabbedPane.addTab(bundle.getString("PreferencesDialog.generalPanel.tab.title"),
+                    generalScroll);
 
             }
             dialogPane.add(preferencesTabbedPane, BorderLayout.CENTER);

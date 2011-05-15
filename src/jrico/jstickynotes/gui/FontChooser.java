@@ -58,20 +58,15 @@ import com.jgoodies.forms.layout.FormLayout;
  */
 public class FontChooser extends JDialog {
 
-    public static final String fontSizes[] = { "8", "10", "11", "12", "14",
-            "16", "18", "20", "24", "30", "36", "40", "48", "60", "72" };
+    public static final String fontSizes[] = { "8", "10", "11", "12", "14", "16", "18", "20", "24", "30", "36", "40",
+            "48", "60", "72" };
 
-    public static final String REGULAR_STYLE = BUNDLE
-            .getString("FontChooser.regularStyle.text");
-    public static final String BOLD_STYLE = BUNDLE
-            .getString("FontChooser.boldStyle.text");
-    public static final String ITALIC_STYLE = BUNDLE
-            .getString("FontChooser.italicStyle.text");
-    public static final String BOLD_ITALIC_STYLE = BUNDLE
-            .getString("FontChooser.boldItalicStyle.text");
+    public static final String REGULAR_STYLE = BUNDLE.getString("FontChooser.regularStyle.text");
+    public static final String BOLD_STYLE = BUNDLE.getString("FontChooser.boldStyle.text");
+    public static final String ITALIC_STYLE = BUNDLE.getString("FontChooser.italicStyle.text");
+    public static final String BOLD_ITALIC_STYLE = BUNDLE.getString("FontChooser.boldItalicStyle.text");
 
-    public static final String fontStyles[] = { REGULAR_STYLE, BOLD_STYLE,
-            ITALIC_STYLE, BOLD_ITALIC_STYLE };
+    public static final String fontStyles[] = { REGULAR_STYLE, BOLD_STYLE, ITALIC_STYLE, BOLD_ITALIC_STYLE };
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY
     // //GEN-BEGIN:variables
@@ -113,8 +108,7 @@ public class FontChooser extends JDialog {
         // JFormDesigner - Component initialization - DO NOT MODIFY
         // //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
-        ResourceBundle bundle = ResourceBundle
-                .getBundle("jrico.jstickynotes.resource.jstickynotes");
+        ResourceBundle bundle = ResourceBundle.getBundle("jrico.jstickynotes.resource.jstickynotes");
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         fontLabel = new JLabel();
@@ -151,24 +145,19 @@ public class FontChooser extends JDialog {
 
             // ======== contentPanel ========
             {
-                contentPanel
-                        .setLayout(new FormLayout(
-                                "default, $lcgap, default:grow, 2*($rgap, default:grow(0.5))",
-                                "2*(default, $lgap), fill:default:grow, $lgap, fill:default, $ugap, fill:default"));
+                contentPanel.setLayout(new FormLayout("default, $lcgap, default:grow, 2*($rgap, default:grow(0.5))",
+                    "2*(default, $lgap), fill:default:grow, $lgap, fill:default, $ugap, fill:default"));
 
                 // ---- fontLabel ----
-                fontLabel.setText(bundle
-                        .getString("FontChooser.fontLabel.text"));
+                fontLabel.setText(bundle.getString("FontChooser.fontLabel.text"));
                 contentPanel.add(fontLabel, cc.xywh(1, 1, 3, 1));
 
                 // ---- styleLabel ----
-                styleLabel.setText(bundle
-                        .getString("FontChooser.styleLabel.text"));
+                styleLabel.setText(bundle.getString("FontChooser.styleLabel.text"));
                 contentPanel.add(styleLabel, cc.xy(5, 1));
 
                 // ---- sizeLabel ----
-                sizeLabel.setText(bundle
-                        .getString("FontChooser.sizeLabel.text"));
+                sizeLabel.setText(bundle.getString("FontChooser.sizeLabel.text"));
                 contentPanel.add(sizeLabel, cc.xy(7, 1));
 
                 // ---- fontTextField ----
@@ -187,12 +176,11 @@ public class FontChooser extends JDialog {
                 {
 
                     // ---- fontList ----
-                    fontList
-                            .addListSelectionListener(new ListSelectionListener() {
-                                public void valueChanged(ListSelectionEvent e) {
-                                    fontValueChanged(e);
-                                }
-                            });
+                    fontList.addListSelectionListener(new ListSelectionListener() {
+                        public void valueChanged(ListSelectionEvent e) {
+                            fontValueChanged(e);
+                        }
+                    });
                     fontScroll.setViewportView(fontList);
                 }
                 contentPanel.add(fontScroll, cc.xywh(1, 5, 3, 1));
@@ -201,12 +189,11 @@ public class FontChooser extends JDialog {
                 {
 
                     // ---- styleList ----
-                    styleList
-                            .addListSelectionListener(new ListSelectionListener() {
-                                public void valueChanged(ListSelectionEvent e) {
-                                    fontValueChanged(e);
-                                }
-                            });
+                    styleList.addListSelectionListener(new ListSelectionListener() {
+                        public void valueChanged(ListSelectionEvent e) {
+                            fontValueChanged(e);
+                        }
+                    });
                     styleScroll.setViewportView(styleList);
                 }
                 contentPanel.add(styleScroll, cc.xy(5, 5));
@@ -215,19 +202,17 @@ public class FontChooser extends JDialog {
                 {
 
                     // ---- sizeList ----
-                    sizeList
-                            .addListSelectionListener(new ListSelectionListener() {
-                                public void valueChanged(ListSelectionEvent e) {
-                                    fontValueChanged(e);
-                                }
-                            });
+                    sizeList.addListSelectionListener(new ListSelectionListener() {
+                        public void valueChanged(ListSelectionEvent e) {
+                            fontValueChanged(e);
+                        }
+                    });
                     sizeScroll.setViewportView(sizeList);
                 }
                 contentPanel.add(sizeScroll, cc.xy(7, 5));
 
                 // ---- colorLabel ----
-                colorLabel.setText(bundle
-                        .getString("FontChooser.colorLabel.text"));
+                colorLabel.setText(bundle.getString("FontChooser.colorLabel.text"));
                 contentPanel.add(colorLabel, cc.xy(1, 7));
 
                 // ---- fontColorLabel ----
@@ -240,8 +225,7 @@ public class FontChooser extends JDialog {
                 contentPanel.add(fontColorLabel, cc.xy(3, 7));
 
                 // ---- fontPreviewLabel ----
-                fontPreviewLabel.setText(bundle
-                        .getString("FontChooser.fontPreviewLabel.text"));
+                fontPreviewLabel.setText(bundle.getString("FontChooser.fontPreviewLabel.text"));
                 fontPreviewLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 contentPanel.add(fontPreviewLabel, cc.xywh(1, 9, 7, 1));
             }
@@ -250,9 +234,7 @@ public class FontChooser extends JDialog {
             // ======== buttonBar ========
             {
                 buttonBar.setBorder(null);
-                buttonBar.setLayout(new FormLayout(
-                        "$glue, $button, $rgap, $button",
-                        "$ugap, default, $ugap, pref"));
+                buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "$ugap, default, $ugap, pref"));
                 buttonBar.add(buttonsSeparator, cc.xywh(1, 2, 4, 1));
 
                 // ---- okButton ----
@@ -265,8 +247,7 @@ public class FontChooser extends JDialog {
                 buttonBar.add(okButton, cc.xy(2, 4));
 
                 // ---- cancelButton ----
-                cancelButton.setText(bundle
-                        .getString("FontChooser.cancelButton.text"));
+                cancelButton.setText(bundle.getString("FontChooser.cancelButton.text"));
                 cancelButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         cancelButtonActionPerformed(e);
@@ -285,8 +266,7 @@ public class FontChooser extends JDialog {
 
     private void fillFonts() {
         // fill the font list
-        String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment()
-                .getAvailableFontFamilyNames();
+        String[] fontNames = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         DefaultListModel fontListModel = new DefaultListModel();
         for (int i = 0; i < fontNames.length; i++) {
             fontListModel.addElement(fontNames[i]);
@@ -320,15 +300,13 @@ public class FontChooser extends JDialog {
     }
 
     private void fontValueChanged(ListSelectionEvent e) {
-        if (fontList.getSelectedValue() != null
-                && styleList.getSelectedValue() != null
+        if (fontList.getSelectedValue() != null && styleList.getSelectedValue() != null
                 && sizeList.getSelectedValue() != null) {
             String font = (String) fontList.getSelectedValue();
             String style = (String) styleList.getSelectedValue();
             String size = (String) sizeList.getSelectedValue();
 
-            selectedFont = new Font(font, getSytle(style), Integer
-                    .parseInt(size));
+            selectedFont = new Font(font, getSytle(style), Integer.parseInt(size));
 
             fontPreviewLabel.setFont(selectedFont);
             fontTextField.setText(font);
@@ -338,8 +316,7 @@ public class FontChooser extends JDialog {
     }
 
     private void fontColorLabelMouseClicked(MouseEvent e) {
-        Color color = JColorChooser.showDialog(null,
-                "Select the default color", fontColorLabel.getBackground());
+        Color color = JColorChooser.showDialog(null, "Select the default color", fontColorLabel.getBackground());
         if (color != null) {
             fontColorLabel.setBackground(color);
             fontPreviewLabel.setForeground(color);
@@ -369,8 +346,7 @@ public class FontChooser extends JDialog {
 
     private String getSytle(int style) {
         String result = REGULAR_STYLE;
-        if ((style & Font.BOLD) == Font.BOLD
-                && (style & Font.ITALIC) == Font.ITALIC) {
+        if ((style & Font.BOLD) == Font.BOLD && (style & Font.ITALIC) == Font.ITALIC) {
             result = BOLD_ITALIC_STYLE;
         } else if ((style & Font.BOLD) == Font.BOLD) {
             result = BOLD_STYLE;
@@ -404,8 +380,7 @@ public class FontChooser extends JDialog {
         return option;
     }
 
-    public static Pair<Font, Color> showDialog(Window owner, Font initialFont,
-            Color initialColor) {
+    public static Pair<Font, Color> showDialog(Window owner, Font initialFont, Color initialColor) {
         FontChooser fontChooser = new FontChooser(owner);
         fontChooser.setSelectedFont(initialFont);
         fontChooser.setFontColor(initialColor);
@@ -413,8 +388,7 @@ public class FontChooser extends JDialog {
         fontChooser.setVisible(true);
         Pair<Font, Color> pair = null;
         if (fontChooser.getOption() == JOptionPane.OK_OPTION) {
-            pair = Pair.create(fontChooser.getSelectedFont(), fontChooser
-                    .getFontColor());
+            pair = Pair.create(fontChooser.getSelectedFont(), fontChooser.getFontColor());
         }
         return pair;
     }

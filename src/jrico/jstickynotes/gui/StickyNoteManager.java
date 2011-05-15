@@ -81,14 +81,11 @@ public class StickyNoteManager implements PropertyChangeListener {
             parentFrame.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent ke) {
-                    if (ke.getKeyCode() == KeyEvent.VK_S
-                            && ke.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK) {
+                    if (ke.getKeyCode() == KeyEvent.VK_S && ke.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK) {
                         showNotes(true);
-                    } else if (ke.getKeyCode() == KeyEvent.VK_H
-                            && ke.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK) {
+                    } else if (ke.getKeyCode() == KeyEvent.VK_H && ke.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK) {
                         hideNotes();
-                    } else if (ke.getKeyCode() == KeyEvent.VK_N
-                            && ke.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK) {
+                    } else if (ke.getKeyCode() == KeyEvent.VK_N && ke.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK) {
                         createNote();
                     }
                 }
@@ -129,8 +126,7 @@ public class StickyNoteManager implements PropertyChangeListener {
         String property = pce.getPropertyName();
         if (source instanceof Note) {
             Note note = (Note) source;
-            if (property.equals(Note.STATUS_PROPERTY)
-                    && note.getStatus() == Note.DELETED_STATUS) {
+            if (property.equals(Note.STATUS_PROPERTY) && note.getStatus() == Note.DELETED_STATUS) {
                 stickyNotes.remove(note);
             }
         }
@@ -144,12 +140,10 @@ public class StickyNoteManager implements PropertyChangeListener {
         protected List<Note> doInBackground() throws Exception {
             List<Note> storedNotes = new ArrayList<Note>();
             List<Note> localStoredNotes = noteManager.getLocalStoredNotes();
-            System.out
-                    .println("StoredNotesRetriever.doInBackground() - local stored notes retrieved");
+            System.out.println("StoredNotesRetriever.doInBackground() - local stored notes retrieved");
             publish(localStoredNotes.toArray(emptyArray));
             List<Note> remoteStoredNotes = noteManager.getRemoteStoredNotes();
-            System.out
-                    .println("StoredNotesRetriever.doInBackground() - remote stored notes retrieved");
+            System.out.println("StoredNotesRetriever.doInBackground() - remote stored notes retrieved");
             publish(remoteStoredNotes.toArray(emptyArray));
             storedNotes.addAll(localStoredNotes);
             storedNotes.addAll(remoteStoredNotes);

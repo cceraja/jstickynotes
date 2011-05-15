@@ -27,8 +27,7 @@ import java.awt.event.MouseMotionListener;
 import jrico.jstickynotes.util.Bean;
 import jrico.jstickynotes.util.Screen;
 
-public class MoveController extends Bean implements MouseListener,
-        MouseMotionListener {
+public class MoveController extends Bean implements MouseListener, MouseMotionListener {
 
     public static final String RELATIVE_LOCATION_PROPERTY = "MoveController.relativeLocation";
 
@@ -72,11 +71,9 @@ public class MoveController extends Bean implements MouseListener,
         if (!ignoreEvents) {
             if (isDragging) {
                 isDragging = false;
-                Point relativeLocation = Screen
-                        .getRelativeLocation(componentToMove.getLocation());
+                Point relativeLocation = Screen.getRelativeLocation(componentToMove.getLocation());
                 checkPropertyChangeSupport();
-                notifier.firePropertyChange(RELATIVE_LOCATION_PROPERTY, null,
-                        relativeLocation);
+                notifier.firePropertyChange(RELATIVE_LOCATION_PROPERTY, null, relativeLocation);
             }
         }
     }

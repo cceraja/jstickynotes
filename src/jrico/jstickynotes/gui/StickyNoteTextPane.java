@@ -34,8 +34,8 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JTextPane;
 
-public class StickyNoteTextPane extends JTextPane implements MouseListener,
-        MouseMotionListener, KeyListener, FocusListener {
+public class StickyNoteTextPane extends JTextPane implements MouseListener, MouseMotionListener, KeyListener,
+        FocusListener {
 
     public static final String EDITING_PROPERTY = "StickyNoteTextPane.editing";
 

@@ -67,8 +67,7 @@ public class RemoteRepository implements NoteRepository {
             delete(note);
 
             MimeMessage message = new MimeMessage(session);
-            String xml = XmlReaderWriter.writeObjectsToString(note, note
-                    .getCategories());
+            String xml = XmlReaderWriter.writeObjectsToString(note, note.getCategories());
             message.setSubject(String.valueOf(note.getId()));
             message.setText(xml);
             message.saveChanges();
@@ -119,8 +118,7 @@ public class RemoteRepository implements NoteRepository {
 
             Message messages[] = folder.getMessages();
             for (int i = 0, n = messages.length; i < n; i++) {
-                Note note = XmlReaderWriter.readObjectFromString(messages[i]
-                        .getContent().toString());
+                Note note = XmlReaderWriter.readObjectFromString(messages[i].getContent().toString());
                 if (note != null) {
                     notes.add(note);
                 }

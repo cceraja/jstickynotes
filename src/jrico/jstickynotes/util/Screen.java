@@ -30,8 +30,7 @@ public class Screen {
     }
 
     public static Point getLocation(Note note) {
-        Rectangle screenSize = GraphicsEnvironment
-                .getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        Rectangle screenSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         Point relativeLocation = note.getRelativeLocation();
         int x = Percentage.getValue(relativeLocation.x, screenSize.width);
         int y = Percentage.getValue(relativeLocation.y, screenSize.height);
@@ -39,8 +38,7 @@ public class Screen {
     }
 
     public static Point getRelativeLocation(Point point) {
-        Rectangle screenSize = GraphicsEnvironment
-                .getLocalGraphicsEnvironment().getMaximumWindowBounds();
+        Rectangle screenSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
         int relativeX = Percentage.getPercentage(point.x, screenSize.width);
         int relativeY = Percentage.getPercentage(point.y, screenSize.height);
         return new Point(relativeX, relativeY);

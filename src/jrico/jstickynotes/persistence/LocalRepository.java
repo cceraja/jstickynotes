@@ -33,12 +33,10 @@ import jrico.jstickynotes.util.XmlReaderWriter;
  */
 public class LocalRepository implements NoteRepository {
 
-    public static final String DIRECTORY = System.getProperty("user.home")
-            + File.separator + ".jstickynotes";
+    public static final String DIRECTORY = System.getProperty("user.home") + File.separator + ".jstickynotes";
 
-    public static final String NOTES_DIRECTORY = System
-            .getProperty("user.home")
-            + File.separator + ".jstickynotes" + File.separator + "notes";
+    public static final String NOTES_DIRECTORY = System.getProperty("user.home") + File.separator + ".jstickynotes"
+            + File.separator + "notes";
 
     private static final LocalRepository INSTANCE = new LocalRepository();
 

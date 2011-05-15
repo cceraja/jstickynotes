@@ -23,8 +23,8 @@ import java.util.List;
 import jrico.jstickynotes.model.Note;
 
 /**
- * Specifies the methods a note repository must implement in order to add,
- * update, delete and retrieve notes from a persistence unit.
+ * Specifies the methods a note repository must implement in order to add, update, delete and retrieve notes from a
+ * persistence unit.
  * 
  * @author Jonatan Rico (jrico) jnrico@gmail.com
  * 

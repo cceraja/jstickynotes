@@ -31,8 +31,7 @@ import java.awt.event.MouseMotionListener;
 
 import jrico.jstickynotes.util.Bean;
 
-public class ResizeController extends Bean implements MouseListener,
-        MouseMotionListener, ComponentListener {
+public class ResizeController extends Bean implements MouseListener, MouseMotionListener, ComponentListener {
 
     public static final String DRAGGING_PROPERTY = "ResizeController.resizing";
     public static final String SIZE_PROPERTY = "ResizeController.size";
@@ -48,8 +47,7 @@ public class ResizeController extends Bean implements MouseListener,
     private int deltaX;
     private int deltaY;
 
-    public ResizeController(Component componentToListen,
-            Component componentToResize) {
+    public ResizeController(Component componentToListen, Component componentToResize) {
         this.componentToListen = componentToListen;
         this.componentToResize = componentToResize;
         resizingArea = new Rectangle();
@@ -94,9 +92,8 @@ public class ResizeController extends Bean implements MouseListener,
             deltaX = 0;
             deltaY = 0;
             checkPropertyChangeSupport();
-            notifier.firePropertyChange(SIZE_PROPERTY, null,
-                    new Dimension(componentToResize.getWidth(),
-                            componentToResize.getHeight()));
+            notifier.firePropertyChange(SIZE_PROPERTY, null, new Dimension(componentToResize.getWidth(),
+                componentToResize.getHeight()));
             updateArea();
             notifier.firePropertyChange(DRAGGING_PROPERTY, true, false);
         }
@@ -105,8 +102,7 @@ public class ResizeController extends Bean implements MouseListener,
     @Override
     public void mouseMoved(MouseEvent e) {
         if (resizingArea.contains(e.getX(), e.getY())) {
-            componentToListen.setCursor(Cursor
-                    .getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
+            componentToListen.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
         } else {
             componentToListen.setCursor(Cursor.getDefaultCursor());
         }

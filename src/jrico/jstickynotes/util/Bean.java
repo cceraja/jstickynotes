@@ -43,8 +43,7 @@ public class Bean {
 
     public void removePropertyChangeListeners() {
         checkPropertyChangeSupport();
-        for (PropertyChangeListener listener : notifier
-                .getPropertyChangeListeners()) {
+        for (PropertyChangeListener listener : notifier.getPropertyChangeListeners()) {
             notifier.removePropertyChangeListener(listener);
         }
     }

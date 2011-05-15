@@ -41,8 +41,7 @@ public class Pair<TypeA, TypeB> {
         boolean isEqual = false;
         if (object instanceof Pair) {
             Pair pair = (Pair) object;
-            isEqual = getObjectA().equals(pair.getObjectA())
-                    && getObjectB().equals(pair.getObjectB());
+            isEqual = getObjectA().equals(pair.getObjectA()) && getObjectB().equals(pair.getObjectB());
         }
         return isEqual;
     }
@@ -52,8 +51,7 @@ public class Pair<TypeA, TypeB> {
         return getObjectA().hashCode() | getObjectB().hashCode();
     }
 
-    public static <TypeA, TypeB> Pair<TypeA, TypeB> create(TypeA objectA,
-            TypeB objectB) {
+    public static <TypeA, TypeB> Pair<TypeA, TypeB> create(TypeA objectA, TypeB objectB) {
         return new Pair<TypeA, TypeB>(objectA, objectB);
     }
 }

@@ -43,24 +43,16 @@ public class StickyNoteHeader extends JPanel {
     public static final String ALWAYS_ON_TOP_PROPERTY = "StickyNoteHeader.alwaysOnTop";
     public static final String HIDE_PROPERTY = "StickyNoteHeader.hide";
 
-    public static final String DELETE_TEXT = BUNDLE
-            .getString("StickyNoteHeader.deleteTooltip.text");
-    public static final String DELETE_DIALOG_TEXT = BUNDLE
-            .getString("StickyNoteHeader.deleteDialog.text");
-    public static final String DELETE_DIALOG_TITLE_TEXT = BUNDLE
-            .getString("StickyNoteHeader.deleteDialogTitle.text");
-    public static final String MAIL_TEXT = BUNDLE
-            .getString("StickyNoteHeader.mailTooltip.text");
-    public static final String CHANGE_FONT_TEXT = BUNDLE
-            .getString("StickyNoteHeader.changeFontTooltip.text");
-    public static final String CHANGE_COLOR_TEXT = BUNDLE
-            .getString("StickyNoteHeader.changeColorTooltip.text");
+    public static final String DELETE_TEXT = BUNDLE.getString("StickyNoteHeader.deleteTooltip.text");
+    public static final String DELETE_DIALOG_TEXT = BUNDLE.getString("StickyNoteHeader.deleteDialog.text");
+    public static final String DELETE_DIALOG_TITLE_TEXT = BUNDLE.getString("StickyNoteHeader.deleteDialogTitle.text");
+    public static final String MAIL_TEXT = BUNDLE.getString("StickyNoteHeader.mailTooltip.text");
+    public static final String CHANGE_FONT_TEXT = BUNDLE.getString("StickyNoteHeader.changeFontTooltip.text");
+    public static final String CHANGE_COLOR_TEXT = BUNDLE.getString("StickyNoteHeader.changeColorTooltip.text");
     public static final String CHANGE_COLOR_DIALOG_TITLE_TEXT = BUNDLE
-            .getString("StickyNoteHeader.changeColorDialogTitle.text");
-    public static final String ALWAYS_ON_TOP_TEXT = BUNDLE
-            .getString("StickyNoteHeader.alwaysOnTopTooltip.text");
-    public static final String HIDE_TEXT = BUNDLE
-            .getString("StickyNoteHeader.hideTooltip.text");
+        .getString("StickyNoteHeader.changeColorDialogTitle.text");
+    public static final String ALWAYS_ON_TOP_TEXT = BUNDLE.getString("StickyNoteHeader.alwaysOnTopTooltip.text");
+    public static final String HIDE_TEXT = BUNDLE.getString("StickyNoteHeader.hideTooltip.text");
 
     private IconRepository iconRepository;
     private boolean alwaysOnTop;
@@ -79,15 +71,13 @@ public class StickyNoteHeader extends JPanel {
 
     private void initComponents() {
         // create header actions
-        deleteLabel = new JLabel(iconRepository
-                .getIcon(IconRepository.DELETE_ICON_TYPE));
+        deleteLabel = new JLabel(iconRepository.getIcon(IconRepository.DELETE_ICON_TYPE));
         deleteLabel.setToolTipText(DELETE_TEXT);
         deleteLabel.setBorder(BorderFactory.createEmptyBorder());
         deleteLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                int option = JOptionPane.showConfirmDialog(null,
-                        DELETE_DIALOG_TEXT, DELETE_DIALOG_TITLE_TEXT,
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                int option = JOptionPane.showConfirmDialog(null, DELETE_DIALOG_TEXT, DELETE_DIALOG_TITLE_TEXT,
+                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if (option == JOptionPane.YES_OPTION) {
                     firePropertyChange(DELETE_PROPERTY, false, true);
                 }
@@ -95,8 +85,7 @@ public class StickyNoteHeader extends JPanel {
         });
         add(deleteLabel);
 
-        mailLabel = new JLabel(iconRepository
-                .getIcon(IconRepository.MAIL_ICON_TYPE));
+        mailLabel = new JLabel(iconRepository.getIcon(IconRepository.MAIL_ICON_TYPE));
         mailLabel.setToolTipText(MAIL_TEXT);
         mailLabel.setBorder(BorderFactory.createEmptyBorder());
         mailLabel.addMouseListener(new MouseAdapter() {
@@ -107,14 +96,12 @@ public class StickyNoteHeader extends JPanel {
         // TODO uncomment the next line to add mail storage support
         // add(mailLabel);
 
-        fontLabel = new JLabel(iconRepository
-                .getIcon(IconRepository.FONT_ICON_TYPE));
+        fontLabel = new JLabel(iconRepository.getIcon(IconRepository.FONT_ICON_TYPE));
         fontLabel.setToolTipText(CHANGE_FONT_TEXT);
         fontLabel.setBorder(BorderFactory.createEmptyBorder());
         fontLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                Pair<Font, Color> pair = FontChooser.showDialog(null,
-                        getFont(), getForeground());
+                Pair<Font, Color> pair = FontChooser.showDialog(null, getFont(), getForeground());
                 if (pair != null) {
                     setFont(pair.getObjectA());
                     setForeground(pair.getObjectB());
@@ -124,14 +111,12 @@ public class StickyNoteHeader extends JPanel {
         });
         add(fontLabel);
 
-        changeColorLabel = new JLabel(iconRepository
-                .getIcon(IconRepository.COLOR_ICON_TYPE));
+        changeColorLabel = new JLabel(iconRepository.getIcon(IconRepository.COLOR_ICON_TYPE));
         changeColorLabel.setToolTipText(CHANGE_COLOR_TEXT);
         changeColorLabel.setBorder(BorderFactory.createEmptyBorder());
         changeColorLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                Color color = JColorChooser.showDialog(null,
-                        CHANGE_COLOR_DIALOG_TITLE_TEXT, getBackground());
+                Color color = JColorChooser.showDialog(null, CHANGE_COLOR_DIALOG_TITLE_TEXT, getBackground());
                 if (color != null) {
                     firePropertyChange(COLOR_PROPERTY, null, color);
                 }
@@ -139,22 +124,19 @@ public class StickyNoteHeader extends JPanel {
         });
         add(changeColorLabel);
 
-        alwaysOnTopLabel = new JLabel(iconRepository
-                .getIcon(IconRepository.ALWAYS_ON_TOP_UNSET_ICON_TYPE));
+        alwaysOnTopLabel = new JLabel(iconRepository.getIcon(IconRepository.ALWAYS_ON_TOP_UNSET_ICON_TYPE));
         alwaysOnTopLabel.setToolTipText(ALWAYS_ON_TOP_TEXT);
         alwaysOnTopLabel.setBorder(BorderFactory.createEmptyBorder());
         alwaysOnTopLabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 alwaysOnTop = !alwaysOnTop;
                 setAlwaysOnTopIcon();
-                firePropertyChange(ALWAYS_ON_TOP_PROPERTY, !alwaysOnTop,
-                        alwaysOnTop);
+                firePropertyChange(ALWAYS_ON_TOP_PROPERTY, !alwaysOnTop, alwaysOnTop);
             }
         });
         add(alwaysOnTopLabel);
 
-        hideLabel = new JLabel(iconRepository
-                .getIcon(IconRepository.HIDE_ICON_TYPE));
+        hideLabel = new JLabel(iconRepository.getIcon(IconRepository.HIDE_ICON_TYPE));
         hideLabel.setToolTipText(HIDE_TEXT);
         hideLabel.setBorder(BorderFactory.createEmptyBorder());
         hideLabel.addMouseListener(new MouseAdapter() {
@@ -171,9 +153,7 @@ public class StickyNoteHeader extends JPanel {
     }
 
     private void setAlwaysOnTopIcon() {
-        alwaysOnTopLabel.setIcon(alwaysOnTop ? iconRepository
-                .getIcon(IconRepository.ALWAYS_ON_TOP_SET_ICON_TYPE)
-                : iconRepository
-                        .getIcon(IconRepository.ALWAYS_ON_TOP_UNSET_ICON_TYPE));
+        alwaysOnTopLabel.setIcon(alwaysOnTop ? iconRepository.getIcon(IconRepository.ALWAYS_ON_TOP_SET_ICON_TYPE)
+                : iconRepository.getIcon(IconRepository.ALWAYS_ON_TOP_UNSET_ICON_TYPE));
     }
 }

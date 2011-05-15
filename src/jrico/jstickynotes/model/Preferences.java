@@ -56,8 +56,7 @@ public class Preferences extends Bean {
         Color oldDefaultColor = getDefaultNoteColor();
         this.defaultNoteColor = defaultNoteColor;
         checkPropertyChangeSupport();
-        notifier.firePropertyChange(DEFAULT_COLOR_PROPERTY, oldDefaultColor,
-                defaultNoteColor);
+        notifier.firePropertyChange(DEFAULT_COLOR_PROPERTY, oldDefaultColor, defaultNoteColor);
     }
 
     /**
@@ -93,8 +92,7 @@ public class Preferences extends Bean {
         Color oldFontColor = getDefaultFontColor();
         this.defaultFontColor = defaultFontColor;
         checkPropertyChangeSupport();
-        notifier.firePropertyChange(FONT_COLOR_PROPERTY, oldFontColor,
-                defaultFontColor);
+        notifier.firePropertyChange(FONT_COLOR_PROPERTY, oldFontColor, defaultFontColor);
     }
 
 }

@@ -59,11 +59,9 @@ public class NoteManager implements PropertyChangeListener {
         localRepository = LocalRepository.getInstance();
         remoteRepository = RemoteRepository.getInstance();
         notes = new HashMap<Note, Note>();
-        transactions = new PriorityBlockingQueue<Note>(10,
-                new NoteIdComparator());
+        transactions = new PriorityBlockingQueue<Note>(10, new NoteIdComparator());
         preferences = PreferencesManager.getInstance().getPreferences();
-        Thread thread = Executors.defaultThreadFactory().newThread(
-                new TransactionCommiter());
+        Thread thread = Executors.defaultThreadFactory().newThread(new TransactionCommiter());
         thread.setDaemon(true);
         thread.start();
     }
@@ -77,8 +75,7 @@ public class NoteManager implements PropertyChangeListener {
         Note note = (Note) pce.getSource();
         if (!pce.getPropertyName().equals(Note.STATUS_PROPERTY)) {
             note.setStatus(Note.MODIFIED_STATUS);
-        } else if (note.getStatus() == Note.MODIFIED_STATUS
-                || note.getStatus() == Note.DELETED_STATUS) {
+        } else if (note.getStatus() == Note.MODIFIED_STATUS || note.getStatus() == Note.DELETED_STATUS) {
             transactions.offer(note);
         }
     }
@@ -128,26 +125,20 @@ public class NoteManager implements PropertyChangeListener {
                     Note note = transactions.take();
                     if (note.getStatus() == Note.CREATED_STATUS) {
                         note.setStatus(Note.STORED_STATUS);
-                        System.out
-                                .println("TransactionCommiter.run() - creating the note "
-                                        + note);
+                        System.out.println("TransactionCommiter.run() - creating the note " + note);
                         localRepository.add(note);
                         if (note.getType() == Note.REMOTE_TYPE) {
                             // remoteRepository.add(note);
                         }
                     } else if (note.getStatus() == Note.MODIFIED_STATUS) {
-                        System.out
-                                .println("TransactionCommiter.run() - updating the note "
-                                        + note);
+                        System.out.println("TransactionCommiter.run() - updating the note " + note);
                         note.setStatus(Note.STORED_STATUS);
                         localRepository.update(note);
                         if (note.getType() == Note.REMOTE_TYPE) {
                             // remoteRepository.update(note);
                         }
                     } else if (note.getStatus() == Note.DELETED_STATUS) {
-                        System.out
-                                .println("TransactionCommiter.run() - removing the note "
-                                        + note);
+                        System.out.println("TransactionCommiter.run() - removing the note " + note);
                         notes.remove(note);
                         localRepository.delete(note);
                         if (note.getType() == Note.REMOTE_TYPE) {

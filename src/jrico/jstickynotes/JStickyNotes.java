@@ -41,27 +41,17 @@ import jrico.jstickynotes.gui.StickyNoteManager;
 
 public class JStickyNotes implements Runnable {
 
-    public static final ResourceBundle BUNDLE = ResourceBundle
-            .getBundle("jrico.jstickynotes.resource.jstickynotes");
+    public static final ResourceBundle BUNDLE = ResourceBundle.getBundle("jrico.jstickynotes.resource.jstickynotes");
 
-    public static final String JSTICKYNOTES_TEXT = BUNDLE
-            .getString("JStickyNotes.text");
-    public static final String CREATE_NOTE_TEXT = BUNDLE
-            .getString("JStickyNotes.createNoteItem.text");
-    public static final String SHOW_ALL_NOTES_TEXT = BUNDLE
-            .getString("JStickyNotes.showAllItem.text");
-    public static final String HIDE_ALL_NOTES_TEXT = BUNDLE
-            .getString("JStickyNotes.hideAllItem.text");
-    public static final String PREFERENCES_TEXT = BUNDLE
-            .getString("JStickyNotes.preferencesItem.text");
-    public static final String ABOUT_TEXT = BUNDLE
-            .getString("JStickyNotes.aboutItem.text");
-    public static final String ABOUT_DIALOG_TEXT = BUNDLE
-            .getString("JStickyNotes.aboutDialog.text");
-    public static final String ABOUT_DIALOG_TITLE_TEXT = BUNDLE
-            .getString("JStickyNotes.aboutDialogTitle.text");
-    public static final String EXIT_TEXT = BUNDLE
-            .getString("JStickyNotes.exitItem.text");
+    public static final String JSTICKYNOTES_TEXT = BUNDLE.getString("JStickyNotes.text");
+    public static final String CREATE_NOTE_TEXT = BUNDLE.getString("JStickyNotes.createNoteItem.text");
+    public static final String SHOW_ALL_NOTES_TEXT = BUNDLE.getString("JStickyNotes.showAllItem.text");
+    public static final String HIDE_ALL_NOTES_TEXT = BUNDLE.getString("JStickyNotes.hideAllItem.text");
+    public static final String PREFERENCES_TEXT = BUNDLE.getString("JStickyNotes.preferencesItem.text");
+    public static final String ABOUT_TEXT = BUNDLE.getString("JStickyNotes.aboutItem.text");
+    public static final String ABOUT_DIALOG_TEXT = BUNDLE.getString("JStickyNotes.aboutDialog.text");
+    public static final String ABOUT_DIALOG_TITLE_TEXT = BUNDLE.getString("JStickyNotes.aboutDialogTitle.text");
+    public static final String EXIT_TEXT = BUNDLE.getString("JStickyNotes.exitItem.text");
 
     private StickyNoteManager stickyNoteManager;
 
@@ -101,8 +91,7 @@ public class JStickyNotes implements Runnable {
                 public void actionPerformed(ActionEvent e) {
                     JLabel about = new JLabel(ABOUT_DIALOG_TEXT);
                     about.setIcon(iconRepository.getJStickyNotesIcon(48));
-                    JOptionPane.showMessageDialog(null, about,
-                            ABOUT_DIALOG_TITLE_TEXT, JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(null, about, ABOUT_DIALOG_TITLE_TEXT, JOptionPane.PLAIN_MESSAGE);
                 }
             };
             ActionListener exitListener = new ActionListener() {
@@ -136,9 +125,8 @@ public class JStickyNotes implements Runnable {
             exitItem.addActionListener(exitListener);
             popup.add(exitItem);
 
-            TrayIcon trayIcon = new TrayIcon(iconRepository
-                    .getJStickyNotesIcon(16).getImage(), JSTICKYNOTES_TEXT,
-                    popup);
+            TrayIcon trayIcon = new TrayIcon(iconRepository.getJStickyNotesIcon(16).getImage(), JSTICKYNOTES_TEXT,
+                popup);
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent me) {

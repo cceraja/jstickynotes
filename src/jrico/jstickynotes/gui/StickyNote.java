@@ -82,8 +82,7 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
                 super.paintComponent(g2d);
             }
         };
-        scroll.setBorder(BorderFactory.createEmptyBorder(0, borderSize,
-                borderSize, borderSize));
+        scroll.setBorder(BorderFactory.createEmptyBorder(0, borderSize, borderSize, borderSize));
         scroll.setBackground(color);
         scroll.setForeground(color);
         scroll.setViewportView(text);

@@ -31,39 +31,30 @@ public class IconRepository {
     private static final IconRepository INSTANCE = new IconRepository();
 
     private static final ImageIcon JSTICKY_NOTES_ICON_48 = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/icon48.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/icon48.png"));
     private static final ImageIcon JSTICKY_NOTES_ICON_32 = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/icon32.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/icon32.png"));
     private static final ImageIcon JSTICKY_NOTES_ICON_24 = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/icon24.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/icon24.png"));
     private static final ImageIcon JSTICKY_NOTES_ICON_16 = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/icon16.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/icon16.png"));
     private static final ImageIcon JSTICKY_NOTES_ICON_11 = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/icon11.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/icon11.png"));
 
     private static final ImageIcon DELETE_ICON = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/delete.png"));
-    private static final ImageIcon MAIL_ICON = new ImageIcon(JStickyNotes.class
-            .getResource("/jrico/jstickynotes/resource/icons/mail.png"));
-    private static final ImageIcon HIDE_ICON = new ImageIcon(JStickyNotes.class
-            .getResource("/jrico/jstickynotes/resource/icons/minimize.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/delete.png"));
+    private static final ImageIcon MAIL_ICON = new ImageIcon(
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/mail.png"));
+    private static final ImageIcon HIDE_ICON = new ImageIcon(
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/minimize.png"));
     private static final ImageIcon ALWAYS_ON_TOP_UNSET_ICON = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/alwaysOnTopUnset.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/alwaysOnTopUnset.png"));
     private static final ImageIcon ALWAYS_ON_TOP_SET_ICON = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/alwaysOnTopSet.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/alwaysOnTopSet.png"));
     private static final ImageIcon COLOR_ICON = new ImageIcon(
-            JStickyNotes.class
-                    .getResource("/jrico/jstickynotes/resource/icons/color.png"));
-    private static final ImageIcon FONT_ICON = new ImageIcon(JStickyNotes.class
-            .getResource("/jrico/jstickynotes/resource/icons/font.png"));
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/color.png"));
+    private static final ImageIcon FONT_ICON = new ImageIcon(
+        JStickyNotes.class.getResource("/jrico/jstickynotes/resource/icons/font.png"));
 
     public static final int DELETE_ICON_TYPE = 1;
     public static final int MAIL_ICON_TYPE = 2;

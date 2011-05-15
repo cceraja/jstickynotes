@@ -29,8 +29,7 @@ import java.util.List;
 import jrico.jstickynotes.util.Bean;
 
 /**
- * A note is a logical representation of a desktop's window containing text
- * information.
+ * A note is a logical representation of a desktop's window containing text information.
  * 
  * @author Jonatan Rico (jrico) jnrico@gmail.com
  * 
@@ -113,8 +112,8 @@ public class Note extends Bean implements Serializable {
     private int version;
 
     /**
-     * The note's status. {@link #CREATED_STATUS}, {@link #STORED_STATUS},
-     * {@link #MODIFIED_STATUS}, {@link #DELETED_STATUS}.
+     * The note's status. {@link #CREATED_STATUS}, {@link #STORED_STATUS}, {@link #MODIFIED_STATUS},
+     * {@link #DELETED_STATUS}.
      */
     private int status;
 
@@ -124,8 +123,7 @@ public class Note extends Bean implements Serializable {
     private Color color;
 
     /**
-     * The note's relative location on the screen. This value is not an absolute
-     * position, it is a percentage.
+     * The note's relative location on the screen. This value is not an absolute position, it is a percentage.
      */
     private Point relativeLocation;
 
@@ -270,8 +268,7 @@ public class Note extends Bean implements Serializable {
     }
 
     /**
-     * Returns this notes color as an integer value described by
-     * {@link Color#getRGB}.
+     * Returns this notes color as an integer value described by {@link Color#getRGB}.
      * 
      * @return the color
      * @see #getColor
@@ -281,8 +278,7 @@ public class Note extends Bean implements Serializable {
     }
 
     /**
-     * Sets this note's color. The color is an integer value described by
-     * {@link Color#getRGB}.
+     * Sets this note's color. The color is an integer value described by {@link Color#getRGB}.
      * 
      * @param color
      *            the color
@@ -306,8 +302,7 @@ public class Note extends Bean implements Serializable {
     }
 
     /**
-     * Sets this note's relative location on the screen. This value is not an
-     * absolute position, it is a percentage.
+     * Sets this note's relative location on the screen. This value is not an absolute position, it is a percentage.
      * 
      * @param relativeLocation
      *            the relative location as a {@link Point}
@@ -317,8 +312,7 @@ public class Note extends Bean implements Serializable {
         Point oldRelativeLocation = getRelativeLocation();
         this.relativeLocation = relativeLocation;
         checkPropertyChangeSupport();
-        notifier.firePropertyChange(RELATIVE_LOCATION_PROPERTY,
-                oldRelativeLocation, relativeLocation);
+        notifier.firePropertyChange(RELATIVE_LOCATION_PROPERTY, oldRelativeLocation, relativeLocation);
     }
 
     /**
@@ -390,8 +384,7 @@ public class Note extends Bean implements Serializable {
         boolean oldAlwaysOnTop = isAlwaysOnTop();
         this.alwaysOnTop = alwaysOnTop;
         checkPropertyChangeSupport();
-        notifier.firePropertyChange(ALWAYS_ON_TOP_PROPERTY, oldAlwaysOnTop,
-                alwaysOnTop);
+        notifier.firePropertyChange(ALWAYS_ON_TOP_PROPERTY, oldAlwaysOnTop, alwaysOnTop);
     }
 
     /**
@@ -427,8 +420,7 @@ public class Note extends Bean implements Serializable {
         Color oldFontColor = getFontColor();
         this.fontColor = fontColor;
         checkPropertyChangeSupport();
-        notifier.firePropertyChange(FONT_COLOR_PROPERTY, oldFontColor,
-                fontColor);
+        notifier.firePropertyChange(FONT_COLOR_PROPERTY, oldFontColor, fontColor);
     }
 
     /**
@@ -475,8 +467,7 @@ public class Note extends Bean implements Serializable {
         List<String> oldCategories = getCategories();
         this.categories = categories;
         checkPropertyChangeSupport();
-        notifier.firePropertyChange(CATEGORIES_PROPERTY, oldCategories,
-                categories);
+        notifier.firePropertyChange(CATEGORIES_PROPERTY, oldCategories, categories);
     }
 
     /**
@@ -489,8 +480,7 @@ public class Note extends Bean implements Serializable {
     public void addCategory(String category) {
         categories.add(category);
         checkPropertyChangeSupport();
-        notifier.firePropertyChange(CATEGORIES_PROPERTY, Collections
-                .emptyList(), categories);
+        notifier.firePropertyChange(CATEGORIES_PROPERTY, Collections.emptyList(), categories);
     }
 
     /**
@@ -503,8 +493,7 @@ public class Note extends Bean implements Serializable {
     public void removeCategory(String category) {
         categories.remove(category);
         checkPropertyChangeSupport();
-        notifier.firePropertyChange(CATEGORIES_PROPERTY, Collections
-                .emptyList(), categories);
+        notifier.firePropertyChange(CATEGORIES_PROPERTY, Collections.emptyList(), categories);
     }
 
     @Override

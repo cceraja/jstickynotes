@@ -30,8 +30,7 @@ import jrico.jstickynotes.util.XmlReaderWriter;
 
 public class PreferencesManager implements PropertyChangeListener {
 
-    public static final String PREFERENCES_FILE = LocalRepository.DIRECTORY
-            + File.separator + "preferences.xml";
+    public static final String PREFERENCES_FILE = LocalRepository.DIRECTORY + File.separator + "preferences.xml";
 
     private static final PreferencesManager INSTANCE = new PreferencesManager();
 
