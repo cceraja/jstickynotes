@@ -67,7 +67,7 @@ public class ResizeController extends Bean implements MouseListener, MouseMotion
         if (isInside) {
             deltaX = componentToListen.getWidth() - me.getX();
             deltaY = componentToListen.getHeight() - me.getY();
-            checkPropertyChangeSupport();
+            getNotifier();
             notifier.firePropertyChange(DRAGGING_PROPERTY, false, true);
         }
     }
@@ -91,7 +91,7 @@ public class ResizeController extends Bean implements MouseListener, MouseMotion
         if (isInside) {
             deltaX = 0;
             deltaY = 0;
-            checkPropertyChangeSupport();
+            getNotifier();
             notifier.firePropertyChange(SIZE_PROPERTY, null, new Dimension(componentToResize.getWidth(),
                 componentToResize.getHeight()));
             updateArea();

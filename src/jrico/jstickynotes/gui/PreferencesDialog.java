@@ -21,7 +21,6 @@ package jrico.jstickynotes.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +29,7 @@ import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -38,7 +38,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
 import jrico.jstickynotes.model.Preferences;
-import jrico.jstickynotes.persistence.PreferencesManager;
 import jrico.jstickynotes.util.Pair;
 
 import com.jgoodies.forms.factories.Borders;
@@ -48,6 +47,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Jonatan Rico
  */
+@SuppressWarnings("serial")
 public class PreferencesDialog extends JDialog {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY
@@ -70,14 +70,14 @@ public class PreferencesDialog extends JDialog {
 
     private Preferences preferences;
 
-    public PreferencesDialog(Dialog owner) {
+    public PreferencesDialog(JFrame owner, Preferences preferences) {
         super(owner);
-        preferences = PreferencesManager.getInstance().getPreferences();
+        this.preferences = preferences;
         initComponents();
     }
 
     private void fontButtonActionPerformed(ActionEvent e) {
-        Pair<Font, Color> pair = FontChooser.showDialog(null, fontLabel.getFont(), fontLabel.getForeground());
+        Pair<Font, Color> pair = FontChooser.showDialog(this, fontLabel.getFont(), fontLabel.getForeground());
         if (pair != null) {
             fontLabel.setFont(pair.getObjectA());
             fontLabel.setForeground(pair.getObjectB());
@@ -85,7 +85,7 @@ public class PreferencesDialog extends JDialog {
     }
 
     private void colorButtonActionPerformed(ActionEvent e) {
-        Color color = JColorChooser.showDialog(null, "JStickyNotes - Choose color", preferences.getDefaultNoteColor());
+        Color color = JColorChooser.showDialog(this, "JStickyNotes - Choose color", preferences.getDefaultNoteColor());
         if (color != null) {
             colorLabel.setBackground(color);
         }
@@ -210,7 +210,7 @@ public class PreferencesDialog extends JDialog {
         }
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
-        setLocationRelativeTo(getOwner());
+        setLocationRelativeTo(null);
         // //GEN-END:initComponents
         colorLabel.setOpaque(true);
         colorLabel.setBackground(preferences.getDefaultNoteColor());

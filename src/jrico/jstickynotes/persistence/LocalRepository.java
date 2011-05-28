@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import jrico.jstickynotes.JStickyNotes;
 import jrico.jstickynotes.model.Note;
 import jrico.jstickynotes.util.XmlReaderWriter;
 
@@ -33,45 +34,31 @@ import jrico.jstickynotes.util.XmlReaderWriter;
  */
 public class LocalRepository implements NoteRepository {
 
-    public static final String DIRECTORY = System.getProperty("user.home") + File.separator + ".jstickynotes";
+    public static final String DIRECTORY = JStickyNotes.DIRECTORY + File.separator + "notes";
 
-    public static final String NOTES_DIRECTORY = System.getProperty("user.home") + File.separator + ".jstickynotes"
-            + File.separator + "notes";
-
-    private static final LocalRepository INSTANCE = new LocalRepository();
-
-    private LocalRepository() {
-        File directory = new File(DIRECTORY);
-        if (!directory.exists()) {
-            System.out.println("Creating the directory: " + DIRECTORY);
-            directory.mkdir();
-        }
-        File notesDirectory = new File(NOTES_DIRECTORY);
+    public LocalRepository() {
+        File notesDirectory = new File(DIRECTORY);
         if (!notesDirectory.exists()) {
-            System.out.println("Creating the directory: " + NOTES_DIRECTORY);
+            System.out.println("Creating the directory: " + DIRECTORY);
             notesDirectory.mkdir();
         }
     }
 
-    public static LocalRepository getInstance() {
-        return INSTANCE;
-    }
-
     @Override
     public void add(Note note) {
-        String file = NOTES_DIRECTORY + File.separator + note.getId();
+        String file = DIRECTORY + File.separator + note.getId();
         XmlReaderWriter.writeObjectsToFile(file, note, note.getCategories());
     }
 
     @Override
     public void delete(Note note) {
-        File file = new File(NOTES_DIRECTORY + File.separator + note.getId());
+        File file = new File(DIRECTORY + File.separator + note.getId());
         file.delete();
     }
 
     @Override
     public List<Note> retrieve() {
-        File directory = new File(NOTES_DIRECTORY);
+        File directory = new File(DIRECTORY);
         List<Note> notes = new ArrayList<Note>();
         for (File file : directory.listFiles()) {
             Note note = XmlReaderWriter.readObjectFromFile(file);

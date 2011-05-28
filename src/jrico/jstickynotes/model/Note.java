@@ -185,8 +185,7 @@ public class Note extends Bean implements Serializable {
     public void setId(long id) {
         long oldId = getId();
         this.id = id;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(ID_PROPERTY, oldId, id);
+        getNotifier().firePropertyChange(ID_PROPERTY, oldId, id);
     }
 
     /**
@@ -211,8 +210,7 @@ public class Note extends Bean implements Serializable {
     public void setType(int type) {
         int oldType = getType();
         this.type = type;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(TYPE_PROPERTY, oldType, type);
+        getNotifier().firePropertyChange(TYPE_PROPERTY, oldType, type);
     }
 
     /**
@@ -235,8 +233,7 @@ public class Note extends Bean implements Serializable {
     public void setVersion(int version) {
         int oldVersion = getVersion();
         this.version = version;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(VERSION_PROPERTY, oldVersion, version);
+        getNotifier().firePropertyChange(VERSION_PROPERTY, oldVersion, version);
     }
 
     /**
@@ -263,8 +260,7 @@ public class Note extends Bean implements Serializable {
     public void setStatus(int status) {
         int oldStatus = getStatus();
         this.status = status;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(STATUS_PROPERTY, oldStatus, status);
+        getNotifier().firePropertyChange(STATUS_PROPERTY, oldStatus, status);
     }
 
     /**
@@ -287,8 +283,7 @@ public class Note extends Bean implements Serializable {
     public void setColor(Color color) {
         Color oldColor = getColor();
         this.color = color;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(COLOR_PROPERTY, oldColor, color);
+        getNotifier().firePropertyChange(COLOR_PROPERTY, oldColor, color);
     }
 
     /**
@@ -311,8 +306,7 @@ public class Note extends Bean implements Serializable {
     public void setRelativeLocation(Point relativeLocation) {
         Point oldRelativeLocation = getRelativeLocation();
         this.relativeLocation = relativeLocation;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(RELATIVE_LOCATION_PROPERTY, oldRelativeLocation, relativeLocation);
+        getNotifier().firePropertyChange(RELATIVE_LOCATION_PROPERTY, oldRelativeLocation, relativeLocation);
     }
 
     /**
@@ -335,8 +329,7 @@ public class Note extends Bean implements Serializable {
     public void setSize(Dimension size) {
         Dimension oldSize = getSize();
         this.size = size;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(SIZE_PROPERTY, oldSize, size);
+        getNotifier().firePropertyChange(SIZE_PROPERTY, oldSize, size);
     }
 
     /**
@@ -359,8 +352,7 @@ public class Note extends Bean implements Serializable {
     public void setVisible(boolean visible) {
         boolean oldVisible = isVisible();
         this.visible = visible;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(VISIBLE_PROPERTY, oldVisible, visible);
+        getNotifier().firePropertyChange(VISIBLE_PROPERTY, oldVisible, visible);
     }
 
     /**
@@ -383,8 +375,7 @@ public class Note extends Bean implements Serializable {
     public void setAlwaysOnTop(boolean alwaysOnTop) {
         boolean oldAlwaysOnTop = isAlwaysOnTop();
         this.alwaysOnTop = alwaysOnTop;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(ALWAYS_ON_TOP_PROPERTY, oldAlwaysOnTop, alwaysOnTop);
+        getNotifier().firePropertyChange(ALWAYS_ON_TOP_PROPERTY, oldAlwaysOnTop, alwaysOnTop);
     }
 
     /**
@@ -401,8 +392,7 @@ public class Note extends Bean implements Serializable {
     public void setFont(Font font) {
         Font oldFont = getFont();
         this.font = font;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(FONT_PROPERTY, oldFont, font);
+        getNotifier().firePropertyChange(FONT_PROPERTY, oldFont, font);
     }
 
     /**
@@ -419,8 +409,7 @@ public class Note extends Bean implements Serializable {
     public void setFontColor(Color fontColor) {
         Color oldFontColor = getFontColor();
         this.fontColor = fontColor;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(FONT_COLOR_PROPERTY, oldFontColor, fontColor);
+        getNotifier().firePropertyChange(FONT_COLOR_PROPERTY, oldFontColor, fontColor);
     }
 
     /**
@@ -443,8 +432,7 @@ public class Note extends Bean implements Serializable {
     public void setText(String text) {
         String oldText = getText();
         this.text = text;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(TEXT_PROPERTY, oldText, text);
+        getNotifier().firePropertyChange(TEXT_PROPERTY, oldText, text);
     }
 
     /**
@@ -466,8 +454,7 @@ public class Note extends Bean implements Serializable {
     public void setCategories(List<String> categories) {
         List<String> oldCategories = getCategories();
         this.categories = categories;
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(CATEGORIES_PROPERTY, oldCategories, categories);
+        getNotifier().firePropertyChange(CATEGORIES_PROPERTY, oldCategories, categories);
     }
 
     /**
@@ -479,8 +466,7 @@ public class Note extends Bean implements Serializable {
      */
     public void addCategory(String category) {
         categories.add(category);
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(CATEGORIES_PROPERTY, Collections.emptyList(), categories);
+        getNotifier().firePropertyChange(CATEGORIES_PROPERTY, Collections.emptyList(), categories);
     }
 
     /**
@@ -492,8 +478,7 @@ public class Note extends Bean implements Serializable {
      */
     public void removeCategory(String category) {
         categories.remove(category);
-        checkPropertyChangeSupport();
-        notifier.firePropertyChange(CATEGORIES_PROPERTY, Collections.emptyList(), categories);
+        getNotifier().firePropertyChange(CATEGORIES_PROPERTY, Collections.emptyList(), categories);
     }
 
     @Override

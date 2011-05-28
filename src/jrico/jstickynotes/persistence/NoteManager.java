@@ -29,11 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import jrico.jstickynotes.model.Note;
 import jrico.jstickynotes.model.Preferences;
-import jrico.jstickynotes.util.NoteIdComparator;
 
 /**
  * Manages the notes and their local (files) or remote (emails) persistence.
@@ -42,8 +41,6 @@ import jrico.jstickynotes.util.NoteIdComparator;
  * 
  */
 public class NoteManager implements PropertyChangeListener {
-
-    private static final NoteManager INSTANCE = new NoteManager();
 
     private LocalRepository localRepository;
 
@@ -55,19 +52,15 @@ public class NoteManager implements PropertyChangeListener {
 
     private Preferences preferences;
 
-    private NoteManager() {
-        localRepository = LocalRepository.getInstance();
-        remoteRepository = RemoteRepository.getInstance();
+    public NoteManager(Preferences preferences) {
+        this.preferences = preferences;
+        localRepository = new LocalRepository();
+        remoteRepository = new RemoteRepository();
         notes = new HashMap<Note, Note>();
-        transactions = new PriorityBlockingQueue<Note>(10, new NoteIdComparator());
-        preferences = PreferencesManager.getInstance().getPreferences();
+        transactions = new LinkedBlockingQueue<Note>();
         Thread thread = Executors.defaultThreadFactory().newThread(new TransactionCommiter());
         thread.setDaemon(true);
         thread.start();
-    }
-
-    public static NoteManager getInstance() {
-        return INSTANCE;
     }
 
     @Override

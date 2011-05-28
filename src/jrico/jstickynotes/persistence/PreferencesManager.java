@@ -25,18 +25,17 @@ import java.io.File;
 
 import javax.swing.UIManager;
 
+import jrico.jstickynotes.JStickyNotes;
 import jrico.jstickynotes.model.Preferences;
 import jrico.jstickynotes.util.XmlReaderWriter;
 
 public class PreferencesManager implements PropertyChangeListener {
 
-    public static final String PREFERENCES_FILE = LocalRepository.DIRECTORY + File.separator + "preferences.xml";
-
-    private static final PreferencesManager INSTANCE = new PreferencesManager();
+    public static final String PREFERENCES_FILE = JStickyNotes.DIRECTORY + File.separator + "preferences.xml";
 
     private Preferences preferences;
 
-    private PreferencesManager() {
+    public PreferencesManager() {
         File file = new File(PREFERENCES_FILE);
         if (file.exists()) {
             preferences = XmlReaderWriter.readObjectFromFile(PREFERENCES_FILE);
@@ -49,10 +48,6 @@ public class PreferencesManager implements PropertyChangeListener {
         }
 
         preferences.addPropertyChangeListener(this);
-    }
-
-    public static PreferencesManager getInstance() {
-        return INSTANCE;
     }
 
     public Preferences getPreferences() {

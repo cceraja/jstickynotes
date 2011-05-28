@@ -72,7 +72,7 @@ public class MoveController extends Bean implements MouseListener, MouseMotionLi
             if (isDragging) {
                 isDragging = false;
                 Point relativeLocation = Screen.getRelativeLocation(componentToMove.getLocation());
-                checkPropertyChangeSupport();
+                getNotifier();
                 notifier.firePropertyChange(RELATIVE_LOCATION_PROPERTY, null, relativeLocation);
             }
         }

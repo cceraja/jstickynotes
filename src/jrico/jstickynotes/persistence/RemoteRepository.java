@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.Flags.Flag;
 import javax.mail.internet.MimeMessage;
 
 import jrico.jstickynotes.model.Note;
@@ -40,8 +40,6 @@ import jrico.jstickynotes.util.XmlReaderWriter;
  */
 public class RemoteRepository implements NoteRepository {
 
-    private static final RemoteRepository INSTANCE = new RemoteRepository();
-
     private static final String FOLDER_NAME = "JStickyNotes";
 
     private Session session;
@@ -51,13 +49,6 @@ public class RemoteRepository implements NoteRepository {
     private String host = "imap.gmail.com";
     private String username = "";
     private String password = "";
-
-    private RemoteRepository() {
-    }
-
-    public static RemoteRepository getInstance() {
-        return INSTANCE;
-    }
 
     @Override
     public void add(Note note) {

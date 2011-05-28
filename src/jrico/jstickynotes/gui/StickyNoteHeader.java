@@ -25,6 +25,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JColorChooser;
@@ -32,16 +34,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import jrico.jstickynotes.model.Note;
 import jrico.jstickynotes.util.Pair;
 
-public class StickyNoteHeader extends JPanel {
-
-    public static final String DELETE_PROPERTY = "StickyNoteHeader.delete";
-    public static final String MAIL_PROPERTY = "StickyNoteHeader.mail";
-    public static final String FONT_PROPERTY = "StickyNoteHeader.font";
-    public static final String COLOR_PROPERTY = "StickyNoteHeader.color";
-    public static final String ALWAYS_ON_TOP_PROPERTY = "StickyNoteHeader.alwaysOnTop";
-    public static final String HIDE_PROPERTY = "StickyNoteHeader.hide";
+@SuppressWarnings("serial")
+public class StickyNoteHeader extends JPanel implements PropertyChangeListener {
 
     public static final String DELETE_TEXT = BUNDLE.getString("StickyNoteHeader.deleteTooltip.text");
     public static final String DELETE_DIALOG_TEXT = BUNDLE.getString("StickyNoteHeader.deleteDialog.text");
@@ -52,108 +49,126 @@ public class StickyNoteHeader extends JPanel {
     public static final String CHANGE_COLOR_DIALOG_TITLE_TEXT = BUNDLE
         .getString("StickyNoteHeader.changeColorDialogTitle.text");
     public static final String ALWAYS_ON_TOP_TEXT = BUNDLE.getString("StickyNoteHeader.alwaysOnTopTooltip.text");
-    public static final String HIDE_TEXT = BUNDLE.getString("StickyNoteHeader.hideTooltip.text");
+    public static final String SHOWN_TEXT = BUNDLE.getString("StickyNoteHeader.shownTooltip.text");
+    public static final String HIDDEN_TEXT = BUNDLE.getString("StickyNoteHeader.hiddenTooltip.text");
 
-    private IconRepository iconRepository;
-    private boolean alwaysOnTop;
+    private StickyNote stickyNote;
+    private Note note;
     private JLabel deleteLabel;
     private JLabel mailLabel;
     private JLabel fontLabel;
-    private JLabel changeColorLabel;
+    private JLabel colorLabel;
     private JLabel alwaysOnTopLabel;
-    private JLabel hideLabel;
+    private JLabel shownLabel;
 
-    public StickyNoteHeader() {
+    public StickyNoteHeader(StickyNote stickyNote) {
         super(new FlowLayout(FlowLayout.RIGHT));
-        iconRepository = IconRepository.getInstance();
+        this.stickyNote = stickyNote;
+        note = stickyNote.getNote();
+        note.addPropertyChangeListener(this);
         initComponents();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent e) {
+        if (e.getSource() == note) {
+            String property = e.getPropertyName();
+            if (Note.ALWAYS_ON_TOP_PROPERTY.equals(property)) {
+                updateAlwaysOnTopLabel();
+            } else if (Note.VISIBLE_PROPERTY.equals(property)) {
+                updateShownLabel();
+            } else if (Note.FONT_PROPERTY.equals(property)) {
+                setFont(note.getFont());
+            } else if (Note.FONT_COLOR_PROPERTY.equals(property)) {
+                setForeground(note.getFontColor());
+            } else if (Note.COLOR_PROPERTY.equals(property)) {
+                setBackground(note.getColor());
+            }
+        }
     }
 
     private void initComponents() {
         // create header actions
-        deleteLabel = new JLabel(iconRepository.getIcon(IconRepository.DELETE_ICON_TYPE));
+        ActionPerformer actionPerformer = new ActionPerformer();
+        deleteLabel = new JLabel(Icon.DELETE.getImageIcon());
         deleteLabel.setToolTipText(DELETE_TEXT);
         deleteLabel.setBorder(BorderFactory.createEmptyBorder());
-        deleteLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                int option = JOptionPane.showConfirmDialog(null, DELETE_DIALOG_TEXT, DELETE_DIALOG_TITLE_TEXT,
-                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                if (option == JOptionPane.YES_OPTION) {
-                    firePropertyChange(DELETE_PROPERTY, false, true);
-                }
-            }
-        });
+        deleteLabel.addMouseListener(actionPerformer);
         add(deleteLabel);
 
-        mailLabel = new JLabel(iconRepository.getIcon(IconRepository.MAIL_ICON_TYPE));
+        mailLabel = new JLabel(Icon.MAIL.getImageIcon());
         mailLabel.setToolTipText(MAIL_TEXT);
         mailLabel.setBorder(BorderFactory.createEmptyBorder());
-        mailLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                firePropertyChange(MAIL_PROPERTY, false, true);
-            }
-        });
+        mailLabel.addMouseListener(actionPerformer);
         // TODO uncomment the next line to add mail storage support
         // add(mailLabel);
 
-        fontLabel = new JLabel(iconRepository.getIcon(IconRepository.FONT_ICON_TYPE));
+        fontLabel = new JLabel(Icon.FONT.getImageIcon());
         fontLabel.setToolTipText(CHANGE_FONT_TEXT);
         fontLabel.setBorder(BorderFactory.createEmptyBorder());
-        fontLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                Pair<Font, Color> pair = FontChooser.showDialog(null, getFont(), getForeground());
-                if (pair != null) {
-                    setFont(pair.getObjectA());
-                    setForeground(pair.getObjectB());
-                    firePropertyChange(FONT_PROPERTY, null, pair);
-                }
-            }
-        });
+        fontLabel.addMouseListener(actionPerformer);
         add(fontLabel);
 
-        changeColorLabel = new JLabel(iconRepository.getIcon(IconRepository.COLOR_ICON_TYPE));
-        changeColorLabel.setToolTipText(CHANGE_COLOR_TEXT);
-        changeColorLabel.setBorder(BorderFactory.createEmptyBorder());
-        changeColorLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                Color color = JColorChooser.showDialog(null, CHANGE_COLOR_DIALOG_TITLE_TEXT, getBackground());
-                if (color != null) {
-                    firePropertyChange(COLOR_PROPERTY, null, color);
-                }
-            }
-        });
-        add(changeColorLabel);
+        colorLabel = new JLabel(Icon.COLOR.getImageIcon());
+        colorLabel.setToolTipText(CHANGE_COLOR_TEXT);
+        colorLabel.setBorder(BorderFactory.createEmptyBorder());
+        colorLabel.addMouseListener(actionPerformer);
+        add(colorLabel);
 
-        alwaysOnTopLabel = new JLabel(iconRepository.getIcon(IconRepository.ALWAYS_ON_TOP_UNSET_ICON_TYPE));
+        alwaysOnTopLabel = new JLabel();
         alwaysOnTopLabel.setToolTipText(ALWAYS_ON_TOP_TEXT);
         alwaysOnTopLabel.setBorder(BorderFactory.createEmptyBorder());
-        alwaysOnTopLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                alwaysOnTop = !alwaysOnTop;
-                setAlwaysOnTopIcon();
-                firePropertyChange(ALWAYS_ON_TOP_PROPERTY, !alwaysOnTop, alwaysOnTop);
-            }
-        });
+        alwaysOnTopLabel.addMouseListener(actionPerformer);
+        updateAlwaysOnTopLabel();
         add(alwaysOnTopLabel);
 
-        hideLabel = new JLabel(iconRepository.getIcon(IconRepository.HIDE_ICON_TYPE));
-        hideLabel.setToolTipText(HIDE_TEXT);
-        hideLabel.setBorder(BorderFactory.createEmptyBorder());
-        hideLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                firePropertyChange(HIDE_PROPERTY, false, true);
+        shownLabel = new JLabel();
+        shownLabel.setToolTipText(SHOWN_TEXT);
+        shownLabel.setBorder(BorderFactory.createEmptyBorder());
+        shownLabel.addMouseListener(actionPerformer);
+        updateShownLabel();
+        add(shownLabel);
+    }
+
+    private void updateShownLabel() {
+        shownLabel.setIcon(note.isVisible() ? Icon.SHOWN.getImageIcon() : Icon.HIDDEN.getImageIcon());
+        shownLabel.setToolTipText(note.isVisible() ? SHOWN_TEXT : HIDDEN_TEXT);
+    }
+
+    private void updateAlwaysOnTopLabel() {
+        alwaysOnTopLabel.setIcon(note.isAlwaysOnTop() ? Icon.ALWAYS_ON_TOP_SET.getImageIcon()
+                : Icon.ALWAYS_ON_TOP_UNSET.getImageIcon());
+    }
+
+    private class ActionPerformer extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Object source = e.getSource();
+            if (deleteLabel == source) {
+                int option = JOptionPane.showConfirmDialog(stickyNote.getOwner(), DELETE_DIALOG_TEXT,
+                    DELETE_DIALOG_TITLE_TEXT, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (option == JOptionPane.YES_OPTION) {
+                    note.setStatus(Note.DELETED_STATUS);
+                }
+            } else if (mailLabel == source) {
+                note.setType(Note.REMOTE_TYPE);
+            } else if (fontLabel == source) {
+                Pair<Font, Color> pair = FontChooser.showDialog(stickyNote.getOwner(), getFont(), getForeground());
+                if (pair != null) {
+                    note.setFont(pair.getObjectA());
+                    note.setFontColor(pair.getObjectB());
+                }
+            } else if (colorLabel == source) {
+                Color color = JColorChooser.showDialog(stickyNote.getOwner(), CHANGE_COLOR_DIALOG_TITLE_TEXT,
+                    getBackground());
+                if (color != null) {
+                    note.setColor(color);
+                }
+            } else if (alwaysOnTopLabel == source) {
+                note.setAlwaysOnTop(!note.isAlwaysOnTop());
+            } else if (shownLabel == source) {
+                note.setVisible(!note.isVisible());
             }
-        });
-        add(hideLabel);
-    }
-
-    public void setAlwaysOnTop(boolean alwaysOnTop) {
-        this.alwaysOnTop = alwaysOnTop;
-        setAlwaysOnTopIcon();
-    }
-
-    private void setAlwaysOnTopIcon() {
-        alwaysOnTopLabel.setIcon(alwaysOnTop ? iconRepository.getIcon(IconRepository.ALWAYS_ON_TOP_SET_ICON_TYPE)
-                : iconRepository.getIcon(IconRepository.ALWAYS_ON_TOP_UNSET_ICON_TYPE));
+        }
     }
 }

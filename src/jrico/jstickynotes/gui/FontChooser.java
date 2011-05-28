@@ -259,7 +259,7 @@ public class FontChooser extends JDialog {
         }
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(getOwner());
         // //GEN-END:initComponents
         fontColorLabel.setOpaque(true);
     }
@@ -385,6 +385,7 @@ public class FontChooser extends JDialog {
         fontChooser.setSelectedFont(initialFont);
         fontChooser.setFontColor(initialColor);
         fontChooser.pack();
+        fontChooser.setLocationRelativeTo(owner);
         fontChooser.setVisible(true);
         Pair<Font, Color> pair = null;
         if (fontChooser.getOption() == JOptionPane.OK_OPTION) {

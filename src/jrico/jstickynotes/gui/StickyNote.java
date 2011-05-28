@@ -30,13 +30,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
 import javax.swing.plaf.basic.BasicTextPaneUI;
 
 import jrico.jstickynotes.model.Note;
-import jrico.jstickynotes.util.Pair;
 import jrico.jstickynotes.util.Screen;
 
 public class StickyNote extends JWindow implements PropertyChangeListener {
@@ -50,9 +49,10 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
     private ResizeController scrollResizeController;
     private MoveController headerMoveController;
 
-    public StickyNote(JDialog parent, Note note) {
+    public StickyNote(JFrame parent, Note note) {
         super(parent);
         this.note = note;
+        note.addPropertyChangeListener(this);
         init();
     }
 
@@ -94,13 +94,11 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
         add(scroll, BorderLayout.CENTER);
 
         // create the header
-        header = new StickyNoteHeader();
+        header = new StickyNoteHeader(this);
         header.setFont(note.getFont());
         header.setForeground(note.getFontColor());
         header.setBackground(color);
-        header.setAlwaysOnTop(note.isAlwaysOnTop());
         header.addMouseListener(toFrontListener);
-        header.addPropertyChangeListener(this);
         headerMoveController = new MoveController(header, this);
         headerMoveController.addPropertyChangeListener(this);
         add(header, BorderLayout.NORTH);
@@ -110,7 +108,7 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
         setAlwaysOnTop(note.isAlwaysOnTop());
         setLocationRelativeTo(null);
         setLocation(Screen.getLocation(note));
-        setVisible(true);
+        setVisible(note.isVisible());
     }
 
     public Note getNote() {
@@ -135,8 +133,8 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
             processTextEvents(pce);
         } else if (source == scrollResizeController) {
             processScrollResizeControllerEvents(pce);
-        } else if (source == header) {
-            processHeaderEvents(pce);
+        } else if (source == note) {
+            processNoteEvents(pce);
         }
     }
 
@@ -178,33 +176,29 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
         }
     }
 
-    private void processHeaderEvents(PropertyChangeEvent pce) {
+    private void processNoteEvents(PropertyChangeEvent pce) {
         String property = pce.getPropertyName();
 
-        if (property.equals(StickyNoteHeader.DELETE_PROPERTY)) {
-            note.setStatus(Note.DELETED_STATUS);
+        if (Note.STATUS_PROPERTY.equals(property) && ((Integer) pce.getNewValue()) == Note.DELETED_STATUS) {
             dispose();
-        } else if (property.equals(StickyNoteHeader.MAIL_PROPERTY)) {
-            note.setType(Note.REMOTE_TYPE);
-        } else if (property.equals(StickyNoteHeader.FONT_PROPERTY)) {
-            Pair<Font, Color> pair = (Pair<Font, Color>) pce.getNewValue();
-            text.setFont(pair.getObjectA());
-            text.setForeground(pair.getObjectB());
-            note.setFont(pair.getObjectA());
-            note.setFontColor(pair.getObjectB());
-        } else if (property.equals(StickyNoteHeader.COLOR_PROPERTY)) {
+        } else if (Note.FONT_PROPERTY.equals(property)) {
+            text.setFont((Font) pce.getNewValue());
+        } else if (Note.FONT_COLOR_PROPERTY.equals(property)) {
+            text.setForeground((Color) pce.getNewValue());
+        } else if (Note.COLOR_PROPERTY.equals(property)) {
             Color color = (Color) pce.getNewValue();
             text.setBackground(color);
             scroll.setForeground(color);
             header.setBackground(color);
-            note.setColor(color);
-        } else if (property.equals(StickyNoteHeader.ALWAYS_ON_TOP_PROPERTY)) {
+        } else if (Note.ALWAYS_ON_TOP_PROPERTY.equals(property)) {
             boolean isAlwaysOnTop = (Boolean) pce.getNewValue();
             setAlwaysOnTop(isAlwaysOnTop);
-            note.setAlwaysOnTop(isAlwaysOnTop);
-        } else if (property.equals(StickyNoteHeader.HIDE_PROPERTY)) {
-            setVisible(false);
-            note.setVisible(false);
+        } else if (Note.VISIBLE_PROPERTY.equals(property)) {
+            boolean visible = (Boolean) pce.getNewValue();
+
+            if (!visible) {
+                setVisible(visible);
+            }
         }
     }
 

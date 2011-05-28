@@ -25,21 +25,38 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
-import jrico.jstickynotes.gui.IconRepository;
+import jrico.jstickynotes.gui.Icon;
 import jrico.jstickynotes.gui.PreferencesDialog;
-import jrico.jstickynotes.gui.StickyNoteManager;
+import jrico.jstickynotes.gui.StickyNote;
+import jrico.jstickynotes.model.Note;
+import jrico.jstickynotes.persistence.NoteManager;
+import jrico.jstickynotes.persistence.PreferencesManager;
 
-public class JStickyNotes implements Runnable {
+public class JStickyNotes implements Runnable, PropertyChangeListener, ActionListener {
+
+    public static final String DIRECTORY = System.getProperty("user.home") + File.separator + ".jstickynotes";
 
     public static final ResourceBundle BUNDLE = ResourceBundle.getBundle("jrico.jstickynotes.resource.jstickynotes");
 
@@ -53,13 +70,26 @@ public class JStickyNotes implements Runnable {
     public static final String ABOUT_DIALOG_TITLE_TEXT = BUNDLE.getString("JStickyNotes.aboutDialogTitle.text");
     public static final String EXIT_TEXT = BUNDLE.getString("JStickyNotes.exitItem.text");
 
-    private StickyNoteManager stickyNoteManager;
+    public static final int NONE = 0;
+    public static final int ALWAYS_ON_TOP = 1;
+    public static final int VISIBLE = 2;
+    public static final int ALL = 3;
 
-    private IconRepository iconRepository;
+    private PreferencesManager preferencesManager;
+    private NoteManager noteManager;
+    private Map<Note, StickyNote> stickyNotes;
+    private JFrame frame;
+    private int showMode;
 
     public JStickyNotes() {
-        stickyNoteManager = StickyNoteManager.getInstance();
-        iconRepository = IconRepository.getInstance();
+        File directory = new File(DIRECTORY);
+        if (!directory.exists()) {
+            System.out.println("Creating the directory: " + DIRECTORY);
+            directory.mkdir();
+        }
+        preferencesManager = new PreferencesManager();
+        noteManager = new NoteManager(preferencesManager.getPreferences());
+        stickyNotes = new HashMap<Note, StickyNote>();
     }
 
     @Override
@@ -67,71 +97,36 @@ public class JStickyNotes implements Runnable {
         if (SystemTray.isSupported()) {
             SystemTray tray = SystemTray.getSystemTray();
 
-            ActionListener createNoteListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    stickyNoteManager.createNote();
-                }
-            };
-            ActionListener showAllListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    stickyNoteManager.showNotes(true);
-                }
-            };
-            ActionListener hideAllListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    stickyNoteManager.hideNotes();
-                }
-            };
-            ActionListener preferencesListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    new PreferencesDialog(null).setVisible(true);
-                }
-            };
-            ActionListener aboutListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    JLabel about = new JLabel(ABOUT_DIALOG_TEXT);
-                    about.setIcon(iconRepository.getJStickyNotesIcon(48));
-                    JOptionPane.showMessageDialog(null, about, ABOUT_DIALOG_TITLE_TEXT, JOptionPane.PLAIN_MESSAGE);
-                }
-            };
-            ActionListener exitListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.exit(0);
-                }
-            };
-
             PopupMenu popup = new PopupMenu();
-
             MenuItem createNoteItem = new MenuItem(CREATE_NOTE_TEXT);
-            createNoteItem.addActionListener(createNoteListener);
+            createNoteItem.addActionListener(this);
             popup.add(createNoteItem);
             popup.addSeparator();
             MenuItem showAllItem = new MenuItem(SHOW_ALL_NOTES_TEXT);
-            showAllItem.addActionListener(showAllListener);
+            showAllItem.addActionListener(this);
             popup.add(showAllItem);
             MenuItem hideAllItem = new MenuItem(HIDE_ALL_NOTES_TEXT);
-            hideAllItem.addActionListener(hideAllListener);
+            hideAllItem.addActionListener(this);
             popup.add(hideAllItem);
             popup.addSeparator();
             MenuItem preferencesItem = new MenuItem(PREFERENCES_TEXT);
-            preferencesItem.addActionListener(preferencesListener);
+            preferencesItem.addActionListener(this);
             popup.add(preferencesItem);
             popup.addSeparator();
             MenuItem aboutItem = new MenuItem(ABOUT_TEXT);
-            aboutItem.addActionListener(aboutListener);
+            aboutItem.addActionListener(this);
             popup.add(aboutItem);
             popup.addSeparator();
             MenuItem exitItem = new MenuItem(EXIT_TEXT);
-            exitItem.addActionListener(exitListener);
+            exitItem.addActionListener(this);
             popup.add(exitItem);
 
-            TrayIcon trayIcon = new TrayIcon(iconRepository.getJStickyNotesIcon(16).getImage(), JSTICKYNOTES_TEXT,
-                popup);
+            TrayIcon trayIcon = new TrayIcon(Icon.getJStickyNotesImageIcon(16).getImage(), JSTICKYNOTES_TEXT, popup);
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent me) {
                     if (me.getButton() == MouseEvent.BUTTON1) {
-                        stickyNoteManager.showNotes(false);
+                        frame.toFront();
                     }
                 }
             });
@@ -141,10 +136,129 @@ public class JStickyNotes implements Runnable {
             } catch (AWTException e) {
                 System.err.println("TrayIcon could not be added.");
             }
-
-            stickyNoteManager.init();
         } else {
             System.err.println("System tray is currently not supported.");
+        }
+
+        // create the parent window for all sticky notes
+        frame = new JFrame(JStickyNotes.JSTICKYNOTES_TEXT);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImages(Icon.getJStickyNotesImages());
+        frame.setUndecorated(true);
+        frame.setSize(0, 0);
+        frame.setLocation(0, 0);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+                showNotes(VISIBLE);
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                showNotes(ALWAYS_ON_TOP);
+            }
+        });
+        frame.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+                boolean controlDown = e.getModifiersEx() == KeyEvent.CTRL_DOWN_MASK;
+                if (controlDown && keyCode == KeyEvent.VK_S && showMode < ALL) {
+                    showNotes(showMode + 1);
+                } else if (controlDown && keyCode == KeyEvent.VK_H && showMode > ALWAYS_ON_TOP) {
+                    showNotes(showMode - 1);
+                } else if (controlDown && keyCode == KeyEvent.VK_N) {
+                    createNote();
+                }
+            }
+        });
+        frame.setVisible(true);
+
+        // retrieve the stored notes
+        new StoredNotesRetriever().execute();
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent pce) {
+        Object source = pce.getSource();
+        String property = pce.getPropertyName();
+        if (source instanceof Note) {
+            Note note = (Note) source;
+            if (property.equals(Note.STATUS_PROPERTY) && note.getStatus() == Note.DELETED_STATUS) {
+                stickyNotes.remove(note);
+            }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String label = ((MenuItem) e.getSource()).getLabel();
+        if (CREATE_NOTE_TEXT.equals(label)) {
+            createNote();
+        } else if (SHOW_ALL_NOTES_TEXT.equals(label)) {
+            showNotes(ALL);
+        } else if (HIDE_ALL_NOTES_TEXT.equals(label)) {
+            showNotes(NONE);
+        } else if (PREFERENCES_TEXT.equals(label)) {
+            new PreferencesDialog(frame, preferencesManager.getPreferences()).setVisible(true);
+        } else if (ABOUT_TEXT.equals(label)) {
+            JLabel about = new JLabel(ABOUT_DIALOG_TEXT);
+            about.setIcon(Icon.getJStickyNotesImageIcon(48));
+            JOptionPane.showMessageDialog(frame, about, ABOUT_DIALOG_TITLE_TEXT, JOptionPane.PLAIN_MESSAGE);
+        } else if (EXIT_TEXT.equals(label)) {
+            System.exit(0);
+        }
+    }
+
+    public void createNote() {
+        Note note = noteManager.createNote();
+        note.setVisible(true);
+        note.addPropertyChangeListener(this);
+        StickyNote stickyNote = new StickyNote(frame, note);
+        stickyNotes.put(note, stickyNote);
+        stickyNote.startEditingText();
+    }
+
+    public void showNotes(int mode) {
+        showMode = mode;
+        for (Note note : stickyNotes.keySet()) {
+            StickyNote stickyNote = stickyNotes.get(note);
+            if (mode == NONE) {
+                stickyNote.setVisible(false);
+            } else if (mode == ALWAYS_ON_TOP) {
+                stickyNote.setVisible(note.isAlwaysOnTop());
+            } else if (mode == VISIBLE) {
+                stickyNote.setVisible(note.isVisible());
+            } else if (mode == ALL) {
+                stickyNote.setVisible(true);
+            }
+        }
+    }
+
+    private class StoredNotesRetriever extends SwingWorker<Void, List<Note>> {
+        @Override
+        @SuppressWarnings("unchecked")
+        protected Void doInBackground() throws Exception {
+            publish(noteManager.getLocalStoredNotes());
+            System.out.println("JStickyNotes.StoredNotesRetriever.doInBackground() - local stored notes retrieved");
+            publish(noteManager.getRemoteStoredNotes());
+            System.out.println("JStickyNotes.StoredNotesRetriever.doInBackground() - remote stored notes retrieved");
+            return null;
+        }
+
+        @Override
+        protected void process(List<List<Note>> chunks) {
+            for (List<Note> notes : chunks) {
+                for (Note note : notes) {
+                    if (stickyNotes.containsKey(note)) {
+                        StickyNote oldStickyNote = stickyNotes.get(note);
+                        oldStickyNote.dispose();
+                    }
+                    note.addPropertyChangeListener(JStickyNotes.this);
+                    stickyNotes.put(note, new StickyNote(frame, note));
+                }
+            }
         }
     }
 

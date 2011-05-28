@@ -25,24 +25,20 @@ public class Bean {
 
     protected PropertyChangeSupport notifier;
 
-    protected void checkPropertyChangeSupport() {
-        if (notifier == null) {
-            notifier = new PropertyChangeSupport(this);
-        }
+    protected synchronized PropertyChangeSupport getNotifier() {
+        return notifier == null ? notifier = new PropertyChangeSupport(this) : notifier;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
-        checkPropertyChangeSupport();
-        notifier.addPropertyChangeListener(listener);
+        getNotifier().addPropertyChangeListener(listener);
     }
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
-        checkPropertyChangeSupport();
-        notifier.removePropertyChangeListener(listener);
+        getNotifier().removePropertyChangeListener(listener);
     }
 
     public void removePropertyChangeListeners() {
-        checkPropertyChangeSupport();
+        getNotifier();
         for (PropertyChangeListener listener : notifier.getPropertyChangeListeners()) {
             notifier.removePropertyChangeListener(listener);
         }
