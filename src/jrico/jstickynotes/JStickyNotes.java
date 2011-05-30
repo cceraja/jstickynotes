@@ -79,6 +79,7 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     private NoteManager noteManager;
     private Map<Note, StickyNote> stickyNotes;
     private JFrame frame;
+    private StickyNote childWindowParent;
     private int showMode;
 
     public JStickyNotes() {
@@ -182,12 +183,10 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
         Object source = pce.getSource();
-        String property = pce.getPropertyName();
-        if (source instanceof Note) {
-            Note note = (Note) source;
-            if (property.equals(Note.STATUS_PROPERTY) && note.getStatus() == Note.DELETED_STATUS) {
-                stickyNotes.remove(note);
-            }
+        if (source instanceof Note && pce.getNewValue().equals(Note.DELETED_STATUS)) {
+            stickyNotes.remove(source);
+        } else if (source instanceof StickyNote) {
+            childWindowParent = ((Boolean) pce.getNewValue()) ? (StickyNote) source : null;
         }
     }
 
@@ -214,8 +213,9 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     public void createNote() {
         Note note = noteManager.createNote();
         note.setVisible(true);
-        note.addPropertyChangeListener(this);
+        note.addPropertyChangeListener(Note.STATUS_PROPERTY, this);
         StickyNote stickyNote = new StickyNote(frame, note);
+        stickyNote.addPropertyChangeListener(StickyNote.CHILD_WINDOW_OPENED, this);
         stickyNotes.put(note, stickyNote);
         stickyNote.startEditingText();
     }
@@ -255,8 +255,10 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
                         StickyNote oldStickyNote = stickyNotes.get(note);
                         oldStickyNote.dispose();
                     }
-                    note.addPropertyChangeListener(JStickyNotes.this);
-                    stickyNotes.put(note, new StickyNote(frame, note));
+                    note.addPropertyChangeListener(Note.STATUS_PROPERTY, JStickyNotes.this);
+                    StickyNote stickyNote = new StickyNote(frame, note);
+                    stickyNote.addPropertyChangeListener(StickyNote.CHILD_WINDOW_OPENED, JStickyNotes.this);
+                    stickyNotes.put(note, stickyNote);
                 }
             }
         }

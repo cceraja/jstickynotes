@@ -33,6 +33,10 @@ public class Bean {
         getNotifier().addPropertyChangeListener(listener);
     }
 
+    public void addPropertyChangeListener(String property, PropertyChangeListener listener) {
+        getNotifier().addPropertyChangeListener(property, listener);
+    }
+
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         getNotifier().removePropertyChangeListener(listener);
     }

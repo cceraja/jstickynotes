@@ -145,22 +145,28 @@ public class StickyNoteHeader extends JPanel implements PropertyChangeListener {
         public void mouseClicked(MouseEvent e) {
             Object source = e.getSource();
             if (deleteLabel == source) {
+                stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, false, true);
                 int option = JOptionPane.showConfirmDialog(stickyNote.getOwner(), DELETE_DIALOG_TEXT,
                     DELETE_DIALOG_TITLE_TEXT, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, true, false);
                 if (option == JOptionPane.YES_OPTION) {
                     note.setStatus(Note.DELETED_STATUS);
                 }
             } else if (mailLabel == source) {
                 note.setType(Note.REMOTE_TYPE);
             } else if (fontLabel == source) {
+                stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, false, true);
                 Pair<Font, Color> pair = FontChooser.showDialog(stickyNote.getOwner(), getFont(), getForeground());
+                stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, true, false);
                 if (pair != null) {
                     note.setFont(pair.getObjectA());
                     note.setFontColor(pair.getObjectB());
                 }
             } else if (colorLabel == source) {
+                stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, false, true);
                 Color color = JColorChooser.showDialog(stickyNote.getOwner(), CHANGE_COLOR_DIALOG_TITLE_TEXT,
                     getBackground());
+                stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, true, false);
                 if (color != null) {
                     note.setColor(color);
                 }

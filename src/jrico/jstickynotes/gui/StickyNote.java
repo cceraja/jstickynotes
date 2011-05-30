@@ -38,7 +38,10 @@ import javax.swing.plaf.basic.BasicTextPaneUI;
 import jrico.jstickynotes.model.Note;
 import jrico.jstickynotes.util.Screen;
 
+@SuppressWarnings("serial")
 public class StickyNote extends JWindow implements PropertyChangeListener {
+
+    public static final String CHILD_WINDOW_OPENED = "childWindowOpened";
 
     private Note note;
     private StickyNoteTextPane text;
@@ -136,6 +139,11 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
         } else if (source == note) {
             processNoteEvents(pce);
         }
+    }
+
+    @Override
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        super.firePropertyChange(propertyName, oldValue, newValue);
     }
 
     private void processTextEvents(PropertyChangeEvent pce) {
