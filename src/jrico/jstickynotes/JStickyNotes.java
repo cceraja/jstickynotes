@@ -122,7 +122,8 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
             exitItem.addActionListener(this);
             popup.add(exitItem);
 
-            TrayIcon trayIcon = new TrayIcon(Icon.getJStickyNotesImageIcon(16).getImage(), JSTICKYNOTES_TEXT, popup);
+            TrayIcon trayIcon = new TrayIcon(Icon.getJStickyNotesImageIcon(tray.getTrayIconSize().width).getImage(),
+                JSTICKYNOTES_TEXT, popup);
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseAdapter() {
                 public void mousePressed(MouseEvent me) {

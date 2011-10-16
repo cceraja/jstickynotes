@@ -27,7 +27,6 @@ import javax.swing.ImageIcon;
 import jrico.jstickynotes.JStickyNotes;
 
 public enum Icon {
-    JSTICKY_NOTES_11("icon11.png"),
     JSTICKY_NOTES_16("icon16.png"),
     JSTICKY_NOTES_24("icon24.png"),
     JSTICKY_NOTES_32("icon32.png"),
@@ -55,9 +54,7 @@ public enum Icon {
     public static ImageIcon getJStickyNotesImageIcon(int size) {
         ImageIcon icon = null;
 
-        if (size > 0 && size <= 13) {
-            icon = JSTICKY_NOTES_11.getImageIcon();
-        } else if (size > 13 && size <= 20) {
+        if (size > 0 && size <= 20) {
             icon = JSTICKY_NOTES_16.getImageIcon();
         } else if (size > 20 && size <= 28) {
             icon = JSTICKY_NOTES_24.getImageIcon();
@@ -71,8 +68,7 @@ public enum Icon {
     }
 
     public static List<Image> getJStickyNotesImages() {
-        return Arrays.asList(JSTICKY_NOTES_11.getImageIcon().getImage(), JSTICKY_NOTES_16.getImageIcon().getImage(),
-            JSTICKY_NOTES_24.getImageIcon().getImage(), JSTICKY_NOTES_32.getImageIcon().getImage(), JSTICKY_NOTES_48
-                .getImageIcon().getImage());
+        return Arrays.asList(JSTICKY_NOTES_16.getImageIcon().getImage(), JSTICKY_NOTES_24.getImageIcon().getImage(),
+            JSTICKY_NOTES_32.getImageIcon().getImage(), JSTICKY_NOTES_48.getImageIcon().getImage());
     }
 }
