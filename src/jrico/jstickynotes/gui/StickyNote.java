@@ -43,6 +43,7 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
 
     public static final String CHILD_WINDOW_OPENED = "childWindowOpened";
 
+    private JFrame parent;
     private Note note;
     private StickyNoteTextPane text;
     private JScrollPane scroll;
@@ -54,6 +55,7 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
 
     public StickyNote(JFrame parent, Note note) {
         super(parent);
+        this.parent = parent;
         this.note = note;
         note.addPropertyChangeListener(this);
         init();
@@ -201,6 +203,10 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
         } else if (Note.ALWAYS_ON_TOP_PROPERTY.equals(property)) {
             boolean isAlwaysOnTop = (Boolean) pce.getNewValue();
             setAlwaysOnTop(isAlwaysOnTop);
+
+            if (!isAlwaysOnTop && !parent.isActive()) {
+                setVisible(false);
+            }
         } else if (Note.VISIBLE_PROPERTY.equals(property)) {
             boolean visible = (Boolean) pce.getNewValue();
 
@@ -213,6 +219,7 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
     private class ToFrontListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
+            parent.toFront();
             toFront();
         }
     }

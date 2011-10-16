@@ -353,6 +353,10 @@ public class Note extends Bean implements Serializable {
         boolean oldVisible = isVisible();
         this.visible = visible;
         getNotifier().firePropertyChange(VISIBLE_PROPERTY, oldVisible, visible);
+
+        if (!visible && isAlwaysOnTop()) {
+            setAlwaysOnTop(false);
+        }
     }
 
     /**
@@ -376,6 +380,10 @@ public class Note extends Bean implements Serializable {
         boolean oldAlwaysOnTop = isAlwaysOnTop();
         this.alwaysOnTop = alwaysOnTop;
         getNotifier().firePropertyChange(ALWAYS_ON_TOP_PROPERTY, oldAlwaysOnTop, alwaysOnTop);
+
+        if (alwaysOnTop && !isVisible()) {
+            setVisible(true);
+        }
     }
 
     /**
