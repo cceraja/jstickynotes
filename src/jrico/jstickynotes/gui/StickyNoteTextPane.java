@@ -100,10 +100,10 @@ public class StickyNoteTextPane extends JTextPane implements MouseListener, Mous
 
     @Override
     public void focusLost(FocusEvent e) {
-        firePropertyChange(EDITING_PROPERTY, true, false);
+        select(0, 0);
         setFocusable(false);
         setCursor(Cursor.getDefaultCursor());
-        select(0, 0);
+        firePropertyChange(EDITING_PROPERTY, true, false);
         firePropertyChange(TEXT_PROPERTY, null, getText());
     }
 

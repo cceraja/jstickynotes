@@ -157,15 +157,7 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
             // MoveContoller associated to the text component, enable it
             // otherwise
             textMoveController.setIgnoreEvents(isEditing);
-            if (isEditing) {
-                // request the focus for the window
-                setFocusable(true);
-                setFocusableWindowState(true);
-            } else {
-                // request the focus for the parent window
-                setFocusable(false);
-                getParent().requestFocus();
-            }
+            setFocusable(isEditing);
         } else if (property.equals(StickyNoteTextPane.TEXT_PROPERTY)) {
             String text = (String) pce.getNewValue();
             note.setText(text);
@@ -219,7 +211,6 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
     private class ToFrontListener extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
-            parent.toFront();
             toFront();
         }
     }
