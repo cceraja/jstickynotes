@@ -34,7 +34,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -48,6 +47,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import jrico.jstickynotes.util.Pair;
+import jrico.jstickynotes.util.Screen;
+import jrico.jstickynotes.util.Widgets;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -56,6 +57,7 @@ import com.jgoodies.forms.layout.FormLayout;
 /**
  * @author Jonatan Rico
  */
+@SuppressWarnings("serial")
 public class FontChooser extends JDialog {
 
     public static final String fontSizes[] = { "8", "10", "11", "12", "14", "16", "18", "20", "24", "30", "36", "40",
@@ -261,6 +263,7 @@ public class FontChooser extends JDialog {
         pack();
         setLocationRelativeTo(getOwner());
         // //GEN-END:initComponents
+        Widgets.installEscAction(dialogPane, cancelButton, "doClick");
         fontColorLabel.setOpaque(true);
     }
 
@@ -316,7 +319,8 @@ public class FontChooser extends JDialog {
     }
 
     private void fontColorLabelMouseClicked(MouseEvent e) {
-        Color color = JColorChooser.showDialog(null, "Select the default color", fontColorLabel.getBackground());
+        Color color = ColorChooser.showDialog(this, fontColorLabel.getBackground());
+
         if (color != null) {
             fontColorLabel.setBackground(color);
             fontPreviewLabel.setForeground(color);
@@ -380,17 +384,27 @@ public class FontChooser extends JDialog {
         return option;
     }
 
-    public static Pair<Font, Color> showDialog(Window owner, Font initialFont, Color initialColor) {
+    public static Pair<Font, Color> showDialog(Window owner, Window parent, Font initialFont, Color initialColor) {
         FontChooser fontChooser = new FontChooser(owner);
         fontChooser.setSelectedFont(initialFont);
         fontChooser.setFontColor(initialColor);
         fontChooser.pack();
-        fontChooser.setLocationRelativeTo(owner);
+
+        if (parent == null) {
+            fontChooser.setLocationRelativeTo(owner);
+        } else {
+            Screen.locate(parent, fontChooser);
+        }
+
         fontChooser.setVisible(true);
         Pair<Font, Color> pair = null;
         if (fontChooser.getOption() == JOptionPane.OK_OPTION) {
             pair = Pair.create(fontChooser.getSelectedFont(), fontChooser.getFontColor());
         }
         return pair;
+    }
+
+    public static Pair<Font, Color> showDialog(Window owner, Font initialFont, Color initialColor) {
+        return showDialog(owner, null, initialFont, initialColor);
     }
 }

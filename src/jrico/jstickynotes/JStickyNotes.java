@@ -45,7 +45,6 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import jrico.jstickynotes.gui.Icon;
 import jrico.jstickynotes.gui.PreferencesDialog;
@@ -222,17 +221,27 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     }
 
     public void showNotes(int mode) {
-        showMode = mode;
-        for (Note note : stickyNotes.keySet()) {
-            StickyNote stickyNote = stickyNotes.get(note);
-            if (mode == NONE) {
-                stickyNote.setVisible(false);
-            } else if (mode == ALWAYS_ON_TOP) {
-                stickyNote.setVisible(note.isAlwaysOnTop());
-            } else if (mode == VISIBLE) {
-                stickyNote.setVisible(note.isVisible());
-            } else if (mode == ALL) {
-                stickyNote.setVisible(true);
+        if (childWindowParent == null) {
+            showMode = mode;
+
+            for (Note note : stickyNotes.keySet()) {
+                StickyNote stickyNote = stickyNotes.get(note);
+                if (mode == NONE) {
+                    stickyNote.setVisible(false);
+                } else if (mode == ALWAYS_ON_TOP) {
+                    stickyNote.setVisible(note.isAlwaysOnTop());
+                } else if (mode == VISIBLE) {
+                    stickyNote.setVisible(note.isVisible());
+                } else if (mode == ALL) {
+                    stickyNote.setVisible(true);
+                }
+            }
+        } else {
+            for (Note note : stickyNotes.keySet()) {
+                StickyNote stickyNote = stickyNotes.get(note);
+
+                if (stickyNote != childWindowParent)
+                    stickyNote.setVisible(false);
             }
         }
     }
@@ -266,11 +275,14 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     }
 
     public static void main(String[] args) throws Exception {
-        for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
-            if (lafi.getName().equals("Nimbus")) {
-                UIManager.setLookAndFeel(lafi.getClassName());
-            }
-        }
+        // for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
+        // if (lafi.getName().equals("Nimbus")) {
+        // UIManager.setLookAndFeel(lafi.getClassName());
+        // }
+        // }
+
+        System.out.println(UIManager.getDefaults());
+
         SwingUtilities.invokeLater(new JStickyNotes());
     }
 }

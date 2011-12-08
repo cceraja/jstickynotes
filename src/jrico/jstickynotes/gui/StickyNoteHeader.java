@@ -29,7 +29,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -146,9 +145,9 @@ public class StickyNoteHeader extends JPanel implements PropertyChangeListener {
             Object source = e.getSource();
             if (deleteLabel == source) {
                 stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, false, true);
-                int option = JOptionPane.showConfirmDialog(stickyNote.getOwner(), DELETE_DIALOG_TEXT,
-                    DELETE_DIALOG_TITLE_TEXT, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                int option = DeleteDialog.showDialog(stickyNote.getOwner(), stickyNote);
                 stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, true, false);
+
                 if (option == JOptionPane.YES_OPTION) {
                     note.setStatus(Note.DELETED_STATUS);
                 }
@@ -156,17 +155,19 @@ public class StickyNoteHeader extends JPanel implements PropertyChangeListener {
                 note.setType(Note.REMOTE_TYPE);
             } else if (fontLabel == source) {
                 stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, false, true);
-                Pair<Font, Color> pair = FontChooser.showDialog(stickyNote.getOwner(), getFont(), getForeground());
+                Pair<Font, Color> pair = FontChooser.showDialog(stickyNote.getOwner(), stickyNote, getFont(),
+                    getForeground());
                 stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, true, false);
+
                 if (pair != null) {
                     note.setFont(pair.getObjectA());
                     note.setFontColor(pair.getObjectB());
                 }
             } else if (colorLabel == source) {
                 stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, false, true);
-                Color color = JColorChooser.showDialog(stickyNote.getOwner(), CHANGE_COLOR_DIALOG_TITLE_TEXT,
-                    getBackground());
+                Color color = ColorChooser.showDialog(stickyNote.getOwner(), stickyNote, getBackground());
                 stickyNote.firePropertyChange(StickyNote.CHILD_WINDOW_OPENED, true, false);
+
                 if (color != null) {
                     note.setColor(color);
                 }
