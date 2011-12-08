@@ -50,9 +50,6 @@ import com.jgoodies.forms.layout.FormLayout;
 @SuppressWarnings("serial")
 public class PreferencesDialog extends JDialog {
 
-    // JFormDesigner - Variables declaration - DO NOT MODIFY
-    // //GEN-BEGIN:variables
-    // Generated using JFormDesigner non-commercial license
     private JPanel dialogPane;
     private JPanel buttonBar;
     private JSeparator buttonsSeparator;
@@ -66,7 +63,6 @@ public class PreferencesDialog extends JDialog {
     private JLabel colorLabel;
     private JButton fontButton;
     private JLabel fontLabel;
-    // JFormDesigner - End of variables declaration //GEN-END:variables
 
     private Preferences preferences;
 
@@ -105,9 +101,6 @@ public class PreferencesDialog extends JDialog {
     }
 
     private void initComponents() {
-        // JFormDesigner - Component initialization - DO NOT MODIFY
-        // //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("jrico.jstickynotes.resource.jstickynotes");
         dialogPane = new JPanel();
         buttonBar = new JPanel();
@@ -124,96 +117,69 @@ public class PreferencesDialog extends JDialog {
         fontLabel = new JLabel();
         CellConstraints cc = new CellConstraints();
 
-        // ======== this ========
         setModal(true);
         setTitle(bundle.getString("PreferencesDialog.this.title"));
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
-        // ======== dialogPane ========
-        {
-            dialogPane.setBorder(Borders.DIALOG_BORDER);
-            dialogPane.setLayout(new BorderLayout());
+        dialogPane.setBorder(Borders.DIALOG_BORDER);
+        dialogPane.setLayout(new BorderLayout());
 
-            // ======== buttonBar ========
-            {
-                buttonBar.setBorder(null);
-                buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "$ugap, default, $ugap, pref"));
-                buttonBar.add(buttonsSeparator, cc.xywh(1, 2, 4, 1));
+        buttonBar.setBorder(null);
+        buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "$ugap, default, $ugap, pref"));
+        buttonBar.add(buttonsSeparator, cc.xywh(1, 2, 4, 1));
 
-                // ---- okButton ----
-                okButton.setText(bundle.getString("PreferencesDialog.okButton.text"));
-                okButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        okButtonActionPerformed(e);
-                    }
-                });
-                buttonBar.add(okButton, cc.xy(2, 4));
-
-                // ---- cancelButton ----
-                cancelButton.setText(bundle.getString("PreferencesDialog.cancelButton.text"));
-                cancelButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        cancelButtonActionPerformed(e);
-                    }
-                });
-                buttonBar.add(cancelButton, cc.xy(4, 4));
+        okButton.setText(bundle.getString("PreferencesDialog.okButton.text"));
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                okButtonActionPerformed(e);
             }
-            dialogPane.add(buttonBar, BorderLayout.SOUTH);
+        });
+        buttonBar.add(okButton, cc.xy(2, 4));
 
-            // ======== preferencesTabbedPane ========
-            {
-
-                // ======== generalScroll ========
-                {
-
-                    // ======== generalPanel ========
-                    {
-                        generalPanel.setBorder(Borders.TABBED_DIALOG_BORDER);
-                        generalPanel.setLayout(new FormLayout("2*($button, $lcgap), default:grow",
-                            "default, $ugap, fill:default, $lgap, fill:default"));
-
-                        // ---- generalDescriptionLabel ----
-                        generalDescriptionLabel.setText(bundle
-                            .getString("PreferencesDialog.generalDescriptionLabel.text"));
-                        generalPanel.add(generalDescriptionLabel, cc.xywh(1, 1, 5, 1));
-
-                        // ---- colorButton ----
-                        colorButton.setText(bundle.getString("PreferencesDialog.colorButton.text"));
-                        colorButton.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                colorButtonActionPerformed(e);
-                            }
-                        });
-                        generalPanel.add(colorButton, cc.xy(1, 3));
-                        generalPanel.add(colorLabel, cc.xy(3, 3));
-
-                        // ---- fontButton ----
-                        fontButton.setText(bundle.getString("PreferencesDialog.fontButton.text"));
-                        fontButton.addActionListener(new ActionListener() {
-                            public void actionPerformed(ActionEvent e) {
-                                fontButtonActionPerformed(e);
-                            }
-                        });
-                        generalPanel.add(fontButton, cc.xy(1, 5));
-
-                        // ---- fontLabel ----
-                        fontLabel.setText(bundle.getString("PreferencesDialog.fontLabel.text"));
-                        generalPanel.add(fontLabel, cc.xywh(3, 5, 3, 1));
-                    }
-                    generalScroll.setViewportView(generalPanel);
-                }
-                preferencesTabbedPane.addTab(bundle.getString("PreferencesDialog.generalPanel.tab.title"),
-                    generalScroll);
-
+        cancelButton.setText(bundle.getString("PreferencesDialog.cancelButton.text"));
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cancelButtonActionPerformed(e);
             }
-            dialogPane.add(preferencesTabbedPane, BorderLayout.CENTER);
-        }
+        });
+        buttonBar.add(cancelButton, cc.xy(4, 4));
+        dialogPane.add(buttonBar, BorderLayout.SOUTH);
+
+        generalPanel.setBorder(Borders.TABBED_DIALOG_BORDER);
+        generalPanel.setLayout(new FormLayout("2*($button, $lcgap), default:grow",
+            "default, $ugap, fill:default, $lgap, fill:default"));
+
+        generalDescriptionLabel.setText(bundle.getString("PreferencesDialog.generalDescriptionLabel.text"));
+        generalPanel.add(generalDescriptionLabel, cc.xywh(1, 1, 5, 1));
+
+        colorButton.setText(bundle.getString("PreferencesDialog.colorButton.text"));
+        colorButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                colorButtonActionPerformed(e);
+            }
+        });
+        generalPanel.add(colorButton, cc.xy(1, 3));
+        generalPanel.add(colorLabel, cc.xy(3, 3));
+
+        fontButton.setText(bundle.getString("PreferencesDialog.fontButton.text"));
+        fontButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                fontButtonActionPerformed(e);
+            }
+        });
+        generalPanel.add(fontButton, cc.xy(1, 5));
+
+        fontLabel.setText(bundle.getString("PreferencesDialog.fontLabel.text"));
+        generalPanel.add(fontLabel, cc.xywh(3, 5, 3, 1));
+        generalScroll.setViewportView(generalPanel);
+        preferencesTabbedPane.addTab(bundle.getString("PreferencesDialog.generalPanel.tab.title"), generalScroll);
+
+        dialogPane.add(preferencesTabbedPane, BorderLayout.CENTER);
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(null);
-        // //GEN-END:initComponents
         Widgets.installEscAction(dialogPane, cancelButton, "doClick");
         colorLabel.setOpaque(true);
         colorLabel.setBackground(preferences.getDefaultNoteColor());

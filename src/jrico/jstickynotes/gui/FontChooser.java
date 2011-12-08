@@ -70,9 +70,6 @@ public class FontChooser extends JDialog {
 
     public static final String fontStyles[] = { REGULAR_STYLE, BOLD_STYLE, ITALIC_STYLE, BOLD_ITALIC_STYLE };
 
-    // JFormDesigner - Variables declaration - DO NOT MODIFY
-    // //GEN-BEGIN:variables
-    // Generated using JFormDesigner non-commercial license
     private JPanel dialogPane;
     private JPanel contentPanel;
     private JLabel fontLabel;
@@ -94,7 +91,6 @@ public class FontChooser extends JDialog {
     private JSeparator buttonsSeparator;
     private JButton okButton;
     private JButton cancelButton;
-    // JFormDesigner - End of variables declaration //GEN-END:variables
 
     private Font selectedFont;
 
@@ -107,9 +103,6 @@ public class FontChooser extends JDialog {
     }
 
     private void initComponents() {
-        // JFormDesigner - Component initialization - DO NOT MODIFY
-        // //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("jrico.jstickynotes.resource.jstickynotes");
         dialogPane = new JPanel();
         contentPanel = new JPanel();
@@ -134,135 +127,98 @@ public class FontChooser extends JDialog {
         cancelButton = new JButton();
         CellConstraints cc = new CellConstraints();
 
-        // ======== this ========
         setModal(true);
         setTitle(bundle.getString("FontChooser.this.title"));
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
-        // ======== dialogPane ========
-        {
-            dialogPane.setBorder(Borders.DIALOG_BORDER);
-            dialogPane.setLayout(new BorderLayout());
+        dialogPane.setBorder(Borders.DIALOG_BORDER);
+        dialogPane.setLayout(new BorderLayout());
 
-            // ======== contentPanel ========
-            {
-                contentPanel.setLayout(new FormLayout("default, $lcgap, default:grow, 2*($rgap, default:grow(0.5))",
-                    "2*(default, $lgap), fill:default:grow, $lgap, fill:default, $ugap, fill:default"));
+        contentPanel.setLayout(new FormLayout("default, $lcgap, default:grow, 2*($rgap, default:grow(0.5))",
+            "2*(default, $lgap), fill:default:grow, $lgap, fill:default, $ugap, fill:default"));
 
-                // ---- fontLabel ----
-                fontLabel.setText(bundle.getString("FontChooser.fontLabel.text"));
-                contentPanel.add(fontLabel, cc.xywh(1, 1, 3, 1));
+        fontLabel.setText(bundle.getString("FontChooser.fontLabel.text"));
+        contentPanel.add(fontLabel, cc.xywh(1, 1, 3, 1));
 
-                // ---- styleLabel ----
-                styleLabel.setText(bundle.getString("FontChooser.styleLabel.text"));
-                contentPanel.add(styleLabel, cc.xy(5, 1));
+        styleLabel.setText(bundle.getString("FontChooser.styleLabel.text"));
+        contentPanel.add(styleLabel, cc.xy(5, 1));
 
-                // ---- sizeLabel ----
-                sizeLabel.setText(bundle.getString("FontChooser.sizeLabel.text"));
-                contentPanel.add(sizeLabel, cc.xy(7, 1));
+        sizeLabel.setText(bundle.getString("FontChooser.sizeLabel.text"));
+        contentPanel.add(sizeLabel, cc.xy(7, 1));
 
-                // ---- fontTextField ----
-                fontTextField.setEditable(false);
-                contentPanel.add(fontTextField, cc.xywh(1, 3, 3, 1));
+        fontTextField.setEditable(false);
+        contentPanel.add(fontTextField, cc.xywh(1, 3, 3, 1));
 
-                // ---- styleTextField ----
-                styleTextField.setEditable(false);
-                contentPanel.add(styleTextField, cc.xy(5, 3));
+        styleTextField.setEditable(false);
+        contentPanel.add(styleTextField, cc.xy(5, 3));
 
-                // ---- sizeTextField ----
-                sizeTextField.setEditable(false);
-                contentPanel.add(sizeTextField, cc.xy(7, 3));
+        sizeTextField.setEditable(false);
+        contentPanel.add(sizeTextField, cc.xy(7, 3));
 
-                // ======== fontScroll ========
-                {
-
-                    // ---- fontList ----
-                    fontList.addListSelectionListener(new ListSelectionListener() {
-                        public void valueChanged(ListSelectionEvent e) {
-                            fontValueChanged(e);
-                        }
-                    });
-                    fontScroll.setViewportView(fontList);
-                }
-                contentPanel.add(fontScroll, cc.xywh(1, 5, 3, 1));
-
-                // ======== styleScroll ========
-                {
-
-                    // ---- styleList ----
-                    styleList.addListSelectionListener(new ListSelectionListener() {
-                        public void valueChanged(ListSelectionEvent e) {
-                            fontValueChanged(e);
-                        }
-                    });
-                    styleScroll.setViewportView(styleList);
-                }
-                contentPanel.add(styleScroll, cc.xy(5, 5));
-
-                // ======== sizeScroll ========
-                {
-
-                    // ---- sizeList ----
-                    sizeList.addListSelectionListener(new ListSelectionListener() {
-                        public void valueChanged(ListSelectionEvent e) {
-                            fontValueChanged(e);
-                        }
-                    });
-                    sizeScroll.setViewportView(sizeList);
-                }
-                contentPanel.add(sizeScroll, cc.xy(7, 5));
-
-                // ---- colorLabel ----
-                colorLabel.setText(bundle.getString("FontChooser.colorLabel.text"));
-                contentPanel.add(colorLabel, cc.xy(1, 7));
-
-                // ---- fontColorLabel ----
-                fontColorLabel.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        fontColorLabelMouseClicked(e);
-                    }
-                });
-                contentPanel.add(fontColorLabel, cc.xy(3, 7));
-
-                // ---- fontPreviewLabel ----
-                fontPreviewLabel.setText(bundle.getString("FontChooser.fontPreviewLabel.text"));
-                fontPreviewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                contentPanel.add(fontPreviewLabel, cc.xywh(1, 9, 7, 1));
+        fontList.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                fontValueChanged(e);
             }
-            dialogPane.add(contentPanel, BorderLayout.CENTER);
+        });
+        fontScroll.setViewportView(fontList);
+        contentPanel.add(fontScroll, cc.xywh(1, 5, 3, 1));
 
-            // ======== buttonBar ========
-            {
-                buttonBar.setBorder(null);
-                buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "$ugap, default, $ugap, pref"));
-                buttonBar.add(buttonsSeparator, cc.xywh(1, 2, 4, 1));
-
-                // ---- okButton ----
-                okButton.setText(bundle.getString("FontChooser.okButton.text"));
-                okButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        okButtonActionPerformed(e);
-                    }
-                });
-                buttonBar.add(okButton, cc.xy(2, 4));
-
-                // ---- cancelButton ----
-                cancelButton.setText(bundle.getString("FontChooser.cancelButton.text"));
-                cancelButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        cancelButtonActionPerformed(e);
-                    }
-                });
-                buttonBar.add(cancelButton, cc.xy(4, 4));
+        styleList.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                fontValueChanged(e);
             }
-            dialogPane.add(buttonBar, BorderLayout.SOUTH);
-        }
+        });
+        styleScroll.setViewportView(styleList);
+        contentPanel.add(styleScroll, cc.xy(5, 5));
+
+        sizeList.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                fontValueChanged(e);
+            }
+        });
+        sizeScroll.setViewportView(sizeList);
+        contentPanel.add(sizeScroll, cc.xy(7, 5));
+
+        colorLabel.setText(bundle.getString("FontChooser.colorLabel.text"));
+        contentPanel.add(colorLabel, cc.xy(1, 7));
+
+        fontColorLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                fontColorLabelMouseClicked(e);
+            }
+        });
+        contentPanel.add(fontColorLabel, cc.xy(3, 7));
+
+        fontPreviewLabel.setText(bundle.getString("FontChooser.fontPreviewLabel.text"));
+        fontPreviewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        contentPanel.add(fontPreviewLabel, cc.xywh(1, 9, 7, 1));
+        dialogPane.add(contentPanel, BorderLayout.CENTER);
+
+        buttonBar.setBorder(null);
+        buttonBar.setLayout(new FormLayout("$glue, $button, $rgap, $button", "$ugap, default, $ugap, pref"));
+        buttonBar.add(buttonsSeparator, cc.xywh(1, 2, 4, 1));
+
+        okButton.setText(bundle.getString("FontChooser.okButton.text"));
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                okButtonActionPerformed(e);
+            }
+        });
+        buttonBar.add(okButton, cc.xy(2, 4));
+
+        cancelButton.setText(bundle.getString("FontChooser.cancelButton.text"));
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cancelButtonActionPerformed(e);
+            }
+        });
+        buttonBar.add(cancelButton, cc.xy(4, 4));
+        dialogPane.add(buttonBar, BorderLayout.SOUTH);
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
-        // //GEN-END:initComponents
         Widgets.installEscAction(dialogPane, cancelButton, "doClick");
         fontColorLabel.setOpaque(true);
     }
