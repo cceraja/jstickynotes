@@ -44,7 +44,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.swing.UIManager;
 
 import jrico.jstickynotes.gui.Icon;
 import jrico.jstickynotes.gui.PreferencesDialog;
@@ -275,14 +274,6 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     }
 
     public static void main(String[] args) throws Exception {
-        // for (LookAndFeelInfo lafi : UIManager.getInstalledLookAndFeels()) {
-        // if (lafi.getName().equals("Nimbus")) {
-        // UIManager.setLookAndFeel(lafi.getClassName());
-        // }
-        // }
-
-        System.out.println(UIManager.getDefaults());
-
         SwingUtilities.invokeLater(new JStickyNotes());
     }
 }
