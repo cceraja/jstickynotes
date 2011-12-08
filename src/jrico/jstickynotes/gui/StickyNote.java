@@ -33,6 +33,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
+import javax.swing.plaf.basic.BasicScrollPaneUI;
 import javax.swing.plaf.basic.BasicTextPaneUI;
 
 import jrico.jstickynotes.model.Note;
@@ -87,6 +88,7 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
                 super.paintComponent(g2d);
             }
         };
+        scroll.setUI(new BasicScrollPaneUI());
         scroll.setBorder(BorderFactory.createEmptyBorder(0, borderSize, borderSize, borderSize));
         scroll.setBackground(color);
         scroll.setForeground(color);
@@ -190,7 +192,7 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
         } else if (Note.COLOR_PROPERTY.equals(property)) {
             Color color = (Color) pce.getNewValue();
             text.setBackground(color);
-            scroll.setForeground(color);
+            scroll.setBackground(color);
             header.setBackground(color);
         } else if (Note.ALWAYS_ON_TOP_PROPERTY.equals(property)) {
             boolean isAlwaysOnTop = (Boolean) pce.getNewValue();
