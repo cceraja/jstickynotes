@@ -95,7 +95,19 @@ public class Note extends Bean implements Serializable {
      * The note is marked to be removed.
      */
     public static final int DELETED_STATUS = 4;
-
+    /**
+     * The note is marked as having a sync conflict.
+     */
+    public static final int CONFLICT_STATUS = 5;
+    /**
+     * The note is marked as having a local copy outdated.
+     */
+    public static final int LOCAL_OUTDATED_STATUS = 6;
+    /**
+     * The base version for all new notes
+     */
+    public static final int INITIAL_VERSION = 0;
+   
     /**
      * The note's unique identifier.
      */
@@ -113,7 +125,7 @@ public class Note extends Bean implements Serializable {
 
     /**
      * The note's status. {@link #CREATED_STATUS}, {@link #STORED_STATUS}, {@link #MODIFIED_STATUS},
-     * {@link #DELETED_STATUS}.
+     * {@link #DELETED_STATUS}, {@link #CONFLICT_STATUS}.
      */
     private int status;
 
@@ -163,6 +175,7 @@ public class Note extends Bean implements Serializable {
     private List<String> categories;
 
     public Note() {
+    	version = INITIAL_VERSION;
     }
 
     /**
@@ -502,5 +515,17 @@ public class Note extends Bean implements Serializable {
     @Override
     public int hashCode() {
         return (int) getId();
+    }
+    
+    /**
+     * Compares two notes' version.
+     * 
+     * @param note the note to be compared
+     * @return {@value 0} if they are the same version, less than {@value 0} if this note has a lower 
+      		version than the parameter note, or greater than {@value 0} if this note has a greater 
+      		version than the parameter note.
+     */
+    public int compareVersionTo(Note note){
+    	return this.getVersion() - note.getVersion();
     }
 }
