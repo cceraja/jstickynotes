@@ -31,8 +31,10 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import jrico.jstickynotes.gui.LoginHandler;
 import jrico.jstickynotes.model.Note;
 import jrico.jstickynotes.model.Preferences;
+import jrico.jstickynotes.util.Pair;
 
 /**
  * Manages the notes and their local (files) or remote (emails) persistence.
@@ -97,10 +99,14 @@ public class NoteManager implements PropertyChangeListener {
         List<Note> notes = Collections.emptyList();
 
         if (preferences.isEmailEnabled()) {
-            remoteRepository.setHost(preferences.getHost());
-            remoteRepository.setUsername(preferences.getUsername());
-            remoteRepository.setPassword(preferences.getPassword());
-            notes = getStoredNotes(remoteRepository);
+            Pair<String, String> credentials = new LoginHandler(preferences).login();
+
+            if (credentials != null) {
+                remoteRepository.setHost(preferences.getHost());
+                remoteRepository.setUsername(credentials.getObjectA());
+                remoteRepository.setPassword(credentials.getObjectB());
+                notes = getStoredNotes(remoteRepository);
+            }
         }
 
         return notes;
