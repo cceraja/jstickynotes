@@ -174,4 +174,16 @@ public class RemoteRepository implements NoteRepository {
             session = null;
         }
     }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

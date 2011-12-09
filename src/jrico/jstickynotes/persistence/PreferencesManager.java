@@ -57,7 +57,18 @@ public class PreferencesManager implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         System.out.println("PreferencesManager.propertyChange()");
+        String password = preferences.getPassword();
+
+        if (!preferences.isPasswordStored()) {
+            preferences.removePropertyChangeListener(this);
+            preferences.setPassword(null);
+        }
+
         XmlReaderWriter.writeObjectsToFile(PREFERENCES_FILE, preferences);
 
+        if (!preferences.isPasswordStored()) {
+            preferences.setPassword(password);
+            preferences.addPropertyChangeListener(this);
+        }
     }
 }

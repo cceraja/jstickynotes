@@ -94,7 +94,16 @@ public class NoteManager implements PropertyChangeListener {
     }
 
     public List<Note> getRemoteStoredNotes() {
-        return Collections.emptyList();// getStoredNotes(remoteRepository);
+        List<Note> notes = Collections.emptyList();
+
+        if (preferences.isEmailEnabled()) {
+            remoteRepository.setHost(preferences.getHost());
+            remoteRepository.setUsername(preferences.getUsername());
+            remoteRepository.setPassword(preferences.getPassword());
+            notes = getStoredNotes(remoteRepository);
+        }
+
+        return notes;
     }
 
     private List<Note> getStoredNotes(NoteRepository noteRepository) {
