@@ -1,0 +1,60 @@
+<project name="JStickyNotes" default="installer" basedir=".">
+    <description>
+        Build process of the JStickyNote project
+    </description>
+
+    <!-- set global properties for this build -->
+    <property name="jsnversion" value="0.5" />
+    <property name="src" location="src" />
+    <property name="lib" location="lib" />
+    <property name="build" location="build" />
+    <property name="dist" location="dist" />
+
+
+    <property name="forms.jar" location="${lib}/forms.jar" />
+    <property name="imap.jar" location="${lib}/imap.jar" />
+    <property name="mailapi.jar" location="${lib}/mailapi.jar" />
+
+    <!-- define the IzPack task to generate the installer -->
+    <taskdef name="IzPack" classpath="${basedir}/lib/standalone-compiler.jar" classname="com.izforge.izpack.ant.IzPackTask" />
+
+    <path id="src.classpath">
+        <pathelement location="${forms.jar}" />
+        <pathelement location="${imap.jar}}" />
+        <pathelement location="${mailapi.jar}" />
+    </path>
+
+    <target name="init" depends="clean">
+        <!-- create the build directory structure used by compile -->
+        <mkdir dir="${build}" />
+    </target>
+
+    <target name="compile" depends="init" description="compile the source ">
+        <!-- compile the java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}">
+            <classpath refid="src.classpath" />
+        </javac>
+        <!-- copy all non-java files from ${src} to ${build} -->
+        <copy todir="${build}">
+            <fileset dir="${src}" includes="**/**" excludes="**/*.java,**/*.jfd" />
+        </copy>
+    </target>
+
+    <target name="dist" depends="compile" description="generate the distribution">
+        <!-- create the distribution directory -->
+        <mkdir dir="${dist}" />
+        <!-- put everything in ${build} into the JStickyNotes.jar file -->
+        <jar jarfile="${dist}/JStickyNotes.jar" manifest="MANIFEST.MF" basedir="${build}" />
+    </target>
+
+    <target name="installer" depends="dist" description="generate the installer">
+        <!-- create the installer with IzPack -->
+        <IzPack input="${basedir}/installer.xml" output="${dist}/JStickyNotes-${jsnversion}-install.jar" installerType="standard" basedir="${basedir}" />
+    </target>
+
+    <target name="clean" description="clean up">
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}" />
+        <delete dir="${dist}" />
+    </target>
+</project>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<shortcuts>
+
+    <skipIfNotSupported/>
+
+    <programGroup defaultName="JStickyNotes"
+      location="startMenu"/>
+
+    <shortcut
+      name="JStickyNotes"
+      target='javaw'
+      commandLine='-cp "$INSTALL_PATH\JStickyNotes.jar;$INSTALL_PATH\lib\forms.jar;$INSTALL_PATH\lib\imap.jar;$INSTALL_PATH\lib\mailapi.jar" jrico.jstickynotes.JStickyNotes'
+      workingDirectory="$INSTALL_PATH"
+      description="Launch JStickyNotes"
+      iconFile="$INSTALL_PATH\icons\icon32.ico"
+      programGroup="yes"
+      desktop="yes"
+      startup="yes">
+    </shortcut>
+
+    <shortcut
+      name="Uninstall"
+      target="$INSTALL_PATH\Uninstaller\uninstaller.jar"
+      commandLine=""
+      workingDirectory="$INSTALL_PATH"
+      description="Uninstall JStickyNotes"
+      iconFile="%SystemRoot%\system32\SHELL32.dll"
+      iconIndex="31"
+      programGroup="yes"
+      desktop="no"
+      startup="no">
+    </shortcut>
+
+</shortcuts>
+
