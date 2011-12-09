@@ -36,24 +36,30 @@ public interface NoteRepository {
      * 
      * @param note
      *            the note
+     * @return {@value true} if the operation executed successfully,
+     * 				{@value false} otherwise.
      */
-    public void add(Note note);
+    public boolean add(Note note);
 
     /**
      * Updates the existing note in the persistence unit.
      * 
      * @param note
      *            the note
+     * @return {@value true} if the operation executed successfully,
+     * 				{@value false} otherwise.
      */
-    public void update(Note note);
+    public boolean update(Note note);
 
     /**
      * Deletes this note from the persistence unit.
      * 
      * @param note
      *            the note
+     * @return {@value true} if the operation executed successfully,
+     * 				{@value false} otherwise.
      */
-    public void delete(Note note);
+    public boolean delete(Note note);
 
     /**
      * Retrieves all notes stored in the persistence unit.
