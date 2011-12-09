@@ -23,9 +23,11 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import java.util.ResourceBundle;
 
 @SuppressWarnings("serial")
 public class DeleteDialog extends JDialog implements ActionListener {
+    private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("jrico.jstickynotes.resource.jstickynotes"); //$NON-NLS-1$
 
     private int option = JOptionPane.NO_OPTION;
 
@@ -46,7 +48,7 @@ public class DeleteDialog extends JDialog implements ActionListener {
         });
         setResizable(false);
         setModal(true);
-        setTitle("JStickyNotes - Delete confirmation");
+        setTitle(BUNDLE.getString("DeleteDialog.this.title")); //$NON-NLS-1$
         getContentPane().setLayout(new BorderLayout());
 
         JPanel dialogPanel = new JPanel();
@@ -64,13 +66,13 @@ public class DeleteDialog extends JDialog implements ActionListener {
         JSeparator buttonsSeparator = new JSeparator();
         buttonPane.add(buttonsSeparator, "1, 2, 4, 1");
 
-        JButton okButton = new JButton("Yes");
+        JButton okButton = new JButton(BUNDLE.getString("DeleteDialog.okButton.text")); //$NON-NLS-1$
         okButton.addActionListener(this);
         okButton.setActionCommand("Yes");
         buttonPane.add(okButton, "2, 4");
         getRootPane().setDefaultButton(okButton);
 
-        JButton cancelButton = new JButton("No");
+        JButton cancelButton = new JButton(BUNDLE.getString("DeleteDialog.cancelButton.text")); //$NON-NLS-1$
         cancelButton.addActionListener(this);
         cancelButton.setActionCommand("No");
         buttonPane.add(cancelButton, "4, 4");
@@ -83,7 +85,7 @@ public class DeleteDialog extends JDialog implements ActionListener {
         JLabel iconLabel = new JLabel(UIManager.getIcon("OptionPane.warningIcon"));
         contentPanel.add(iconLabel, "1, 1");
 
-        JLabel messageLabel = new JLabel("Do you really want to delete the note?");
+        JLabel messageLabel = new JLabel(BUNDLE.getString("DeleteDialog.messageLabel.text")); //$NON-NLS-1$
         contentPanel.add(messageLabel, "3, 1");
         dialogPanel.add(contentPanel, BorderLayout.CENTER);
 
