@@ -96,6 +96,7 @@ public class NoteManager implements PropertyChangeListener {
     public Note createNote() {
         Note note = new Note();
         note.setId(System.currentTimeMillis());
+        note.setType(Note.LOCAL_TYPE);
         note.setCategories(new ArrayList<String>());
         note.setStatus(Note.CREATED_STATUS);
         note.setRelativeLocation(new Point(10, 10));
