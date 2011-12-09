@@ -4,6 +4,7 @@ import java.util.concurrent.CountDownLatch;
 
 import javax.swing.SwingUtilities;
 
+import jrico.jstickynotes.JStickyNotes;
 import jrico.jstickynotes.model.Preferences;
 import jrico.jstickynotes.util.Pair;
 
@@ -31,7 +32,8 @@ public class LoginHandler implements Runnable {
 
     @Override
     public void run() {
-        credentials = LoginDialog.showDialog(preferences.getUsername(), preferences.getPassword());
+        credentials = LoginDialog.showDialog(JStickyNotes.getInstance().getFrame(), preferences.getUsername(),
+            preferences.getPassword());
         signal.countDown();
     }
 }

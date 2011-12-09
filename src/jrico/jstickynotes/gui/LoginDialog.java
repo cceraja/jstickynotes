@@ -1,6 +1,7 @@
 package jrico.jstickynotes.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -37,8 +38,8 @@ public class LoginDialog extends JDialog implements ActionListener {
     /**
      * Create the dialog.
      */
-    public LoginDialog() {
-        super();
+    public LoginDialog(Window owner) {
+        super(owner);
         initComponents();
     }
 
@@ -137,8 +138,8 @@ public class LoginDialog extends JDialog implements ActionListener {
         dispose();
     }
 
-    public static Pair<String, String> showDialog(String username, String password) {
-        LoginDialog loginDialog = new LoginDialog();
+    public static Pair<String, String> showDialog(Window owner, String username, String password) {
+        LoginDialog loginDialog = new LoginDialog(owner);
         loginDialog.setUsername(username);
         loginDialog.setPassword(password);
         Screen.center(loginDialog);
