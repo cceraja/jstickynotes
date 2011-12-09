@@ -57,7 +57,7 @@ public class DeleteDialog extends JDialog implements ActionListener {
         JPanel buttonPane = new JPanel();
         dialogPanel.add(buttonPane, BorderLayout.SOUTH);
         buttonPane.setLayout(new FormLayout(new ColumnSpec[] { ColumnSpec.decode("default:grow"),
-                FormFactory.BUTTON_COLSPEC, FormFactory.LABEL_COMPONENT_GAP_COLSPEC, FormFactory.BUTTON_COLSPEC, },
+                FormFactory.BUTTON_COLSPEC, FormFactory.RELATED_GAP_COLSPEC, FormFactory.BUTTON_COLSPEC, },
             new RowSpec[] { FormFactory.UNRELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
                     FormFactory.UNRELATED_GAP_ROWSPEC, RowSpec.decode("25px"), }));
 
