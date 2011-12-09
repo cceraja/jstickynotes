@@ -73,6 +73,8 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     public static final int VISIBLE = 2;
     public static final int ALL = 3;
 
+    private static final JStickyNotes INSTANCE = new JStickyNotes();
+
     private PreferencesManager preferencesManager;
     private NoteManager noteManager;
     private Map<Note, StickyNote> stickyNotes;
@@ -80,7 +82,7 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     private StickyNote childWindowParent;
     private int showMode;
 
-    public JStickyNotes() {
+    private JStickyNotes() {
         File directory = new File(DIRECTORY);
         if (!directory.exists()) {
             System.out.println("Creating the directory: " + DIRECTORY);
@@ -124,6 +126,7 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
                 JSTICKYNOTES_TEXT, popup);
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mousePressed(MouseEvent me) {
                     if (me.getButton() == MouseEvent.BUTTON1) {
                         frame.toFront();
@@ -239,10 +242,19 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
             for (Note note : stickyNotes.keySet()) {
                 StickyNote stickyNote = stickyNotes.get(note);
 
-                if (stickyNote != childWindowParent)
+                if (stickyNote != childWindowParent) {
                     stickyNote.setVisible(false);
+                }
             }
         }
+    }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
+    public static JStickyNotes getInstance() {
+        return INSTANCE;
     }
 
     private class StoredNotesRetriever extends SwingWorker<Void, List<Note>> {
@@ -274,6 +286,6 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     }
 
     public static void main(String[] args) throws Exception {
-        SwingUtilities.invokeLater(new JStickyNotes());
+        SwingUtilities.invokeLater(getInstance());
     }
 }
