@@ -51,8 +51,9 @@ public class RemoteRepository implements NoteRepository {
     private String password = "";
 
     @Override
-    public void add(Note note) {
+    public boolean add(Note note) {
         boolean alreadyOpened = false;
+        boolean success = true;
         try {
             alreadyOpened = openSession();
             delete(note);
@@ -65,16 +66,19 @@ public class RemoteRepository implements NoteRepository {
             folder.appendMessages(new Message[] { message });
         } catch (Exception e) {
             e.printStackTrace();
+            success = false;
         } finally {
             if (!alreadyOpened) {
                 closeSession();
             }
         }
+        return success;
     }
 
     @Override
-    public void delete(Note note) {
+    public boolean delete(Note note) {
         boolean alreadyOpened = false;
+        boolean success = true;
         try {
             alreadyOpened = openSession();
             Message messages[] = folder.getMessages();
@@ -93,11 +97,13 @@ public class RemoteRepository implements NoteRepository {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            success = false;
         } finally {
             if (!alreadyOpened) {
                 closeSession();
             }
         }
+        return success;
     }
 
     @Override
@@ -125,8 +131,11 @@ public class RemoteRepository implements NoteRepository {
     }
 
     @Override
-    public void update(Note note) {
-        add(note);
+    public boolean update(Note note) {
+         if ( delete(note) ) {
+        	return add(note);
+         }
+         return false;
     }
 
     public boolean openSession() throws Exception {

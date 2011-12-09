@@ -45,15 +45,17 @@ public class LocalRepository implements NoteRepository {
     }
 
     @Override
-    public void add(Note note) {
+    public boolean add(Note note) {
         String file = DIRECTORY + File.separator + note.getId();
         XmlReaderWriter.writeObjectsToFile(file, note, note.getCategories());
+        //TODO this shouldn't be returning always true, above code should throw exceptions
+        return true;
     }
 
     @Override
-    public void delete(Note note) {
+    public boolean delete(Note note) {
         File file = new File(DIRECTORY + File.separator + note.getId());
-        file.delete();
+        return file.delete();
     }
 
     @Override
@@ -70,7 +72,10 @@ public class LocalRepository implements NoteRepository {
     }
 
     @Override
-    public void update(Note note) {
-        add(note);
+    public boolean update(Note note) {
+        if ( delete(note) ) {
+        	return add(note);
+        }
+    	return false;
     }
 }
