@@ -238,15 +238,19 @@ public class NoteManager implements PropertyChangeListener {
     // duplicates
     private void optimizeTransactions(Note note) {
         logger.entering(this.getClass().getName(), "optimizeTransactions", note);
-        if (transactions.size() > 0 && remoteRepository.isConnected()) {
-            lock.lock();
-            int counter = 0;
-            while (transactions.contains(note)) {
-                counter++;
-                transactions.remove(note);
+        if (remoteRepository.isConnected()) {
+            if (lock.tryLock()) {
+                try {
+                    int counter = 0;
+                    while (transactions.contains(note)) {
+                        counter++;
+                        transactions.remove(note);
+                    }
+                    logger.finer(counter + " transactions discarded.");
+                } finally {
+                    lock.unlock();
+                }
             }
-            logger.finer(counter + " transactions discarded.");
-            lock.unlock();
         }
         logger.exiting(this.getClass().getName(), "optimizeTransactions");
     }
@@ -256,9 +260,14 @@ public class NoteManager implements PropertyChangeListener {
         public void run() {
             while (true) {
                 try {
+                    Note note = null;
+
                     lock.lock();
-                    Note note = transactions.take();
-                    lock.unlock();
+                    try {
+                        note = transactions.take();
+                    } finally {
+                        lock.unlock();
+                    }
                     logger.finer("START Transaction: " + note);
                     if (note.getStatus() == Note.CREATED_STATUS) {
                         note.setStatus(Note.STORED_STATUS);
