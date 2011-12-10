@@ -46,19 +46,24 @@ public class NoteManager implements PropertyChangeListener {
 
     private static Logger logger = Logger.getLogger(NoteManager.class.getName());
 
-    private LocalRepository localRepository;
+    private final LocalRepository localRepository;
 
-    private RemoteRepository remoteRepository;
+    private final RemoteRepository remoteRepository;
 
-    private Map<Note, Note> notes;
+    private final Map<Note, Note> notes;
 
-    private BlockingQueue<Note> transactions;
+    private final BlockingQueue<Note> transactions;
 
-    private Preferences preferences;
+    private final Preferences preferences;
 
     private List<Note> remoteNoteCopies;
 
-    private Lock lock;
+    /**
+     * Notes that had changes comparing them to the local repo (from the last sync).
+     */
+    private List<Note> lastSyncRemoteNotes;
+
+    private final Lock lock;
 
     public NoteManager(Preferences preferences) {
         this.preferences = preferences;
@@ -144,12 +149,35 @@ public class NoteManager implements PropertyChangeListener {
         if (remoteNoteCopies == null) {
             initializeLocalNotes();
         }
-
-        List<Note> remoteNotes = remoteNoteCopies;
-
         if (remoteRepository.isConnected()) {
+            syncRepositories();
+        }
+        logger.exiting(this.getClass().getName(), "getRemoteStoredNotes", remoteNoteCopies);
+        return remoteNoteCopies;
+    }
 
-            remoteNotes = remoteRepository.retrieve();
+    /**
+     * Sync the local and remote repositories
+     * 
+     * @return a list of Notes with changes
+     */
+    public List<Note> syncRemoteNotes() {
+        logger.entering(this.getClass().getName(), "syncRemoteNotes");
+        if (remoteRepository.isConnected()) {
+            this.syncRepositories();
+        }
+        logger.exiting(this.getClass().getName(), "syncRemoteNotes", lastSyncRemoteNotes);
+        return this.lastSyncRemoteNotes;
+    }
+
+    private void syncRepositories() {
+        logger.entering(this.getClass().getName(), "syncRepositories");
+        if (remoteNoteCopies == null) {
+            initializeLocalNotes();
+        }
+        if (remoteRepository.isConnected()) {
+            lastSyncRemoteNotes = new ArrayList<Note>();
+            List<Note> remoteNotes = remoteRepository.retrieve();
             String nLine = System.getProperty("line.separator");
             for (Note note : remoteNotes) {
                 note.addPropertyChangeListener(this);
@@ -164,16 +192,23 @@ public class NoteManager implements PropertyChangeListener {
                             note.setText("REMOTE:" + nLine + note.getText() + nLine + nLine + "LOCAL:" + nLine
                                     + remoteNoteCopy.getText());
                             remoteNoteCopies.set(remoteNoteCopies.indexOf(note), note);
+                            lastSyncRemoteNotes.add(note);
                         } else {
                             // else, overwrite locally only
                             note.setStatus(Note.LOCAL_OUTDATED_STATUS);
                             remoteNoteCopies.set(remoteNoteCopies.indexOf(note), note);
+                            lastSyncRemoteNotes.add(note);
                         }
                     } else if (note.compareVersionTo(remoteNoteCopy) == 0
                             && remoteNoteCopy.getStatus() == Note.MODIFIED_STATUS) {
                         // remote version outdated
                         remoteNoteCopy.setStatus(Note.MODIFIED_STATUS);
                     }
+                } else {
+                    // remote note does not exist in local
+                    note.setStatus(Note.LOCAL_OUTDATED_STATUS);
+                    remoteNoteCopies.add(note);
+                    lastSyncRemoteNotes.add(note);
                 }
                 if (notes.containsKey(note)) {
                     Note oldNote = notes.remove(note);
@@ -181,10 +216,9 @@ public class NoteManager implements PropertyChangeListener {
                 }
                 notes.put(note, note);
             }
-        }
 
-        logger.exiting(this.getClass().getName(), "getRemoteStoredNotes", remoteNotes);
-        return remoteNotes;
+        }
+        logger.exiting(this.getClass().getName(), "syncRepositories");
     }
 
     public boolean connectRemote() {
