@@ -56,7 +56,7 @@ public class Preferences extends Bean {
     private boolean emailEnabled;
 
     private boolean passwordStored;
-    
+
     private boolean autoLogin;
 
     /**
@@ -195,22 +195,21 @@ public class Preferences extends Bean {
         getNotifier().firePropertyChange(PASSWORD_STORED_PROPERTY, oldPasswordStored, passwordStored);
     }
 
-	/**
-	 * @return the autoLogin config
-	 */
+    /**
+     * @return the autoLogin config
+     */
     public boolean isAutoLogin() {
-		return autoLogin;
-	}
-	
-	/**
+        return autoLogin;
+    }
+
+    /**
      * @param autoLogin
      *            whether the auto-login is enabled at startup or not
      */
-	public void setAutoLogin(boolean autoLogin) {
-		boolean oldAutoLogin = this.isAutoLogin();
-		this.autoLogin = autoLogin;
-		getNotifier().firePropertyChange(AUTO_LOGIN_PROPERTY, oldAutoLogin, autoLogin);
-	}
-    
-    
+    public void setAutoLogin(boolean autoLogin) {
+        boolean oldAutoLogin = this.isAutoLogin();
+        this.autoLogin = autoLogin;
+        getNotifier().firePropertyChange(AUTO_LOGIN_PROPERTY, oldAutoLogin, autoLogin);
+    }
+
 }

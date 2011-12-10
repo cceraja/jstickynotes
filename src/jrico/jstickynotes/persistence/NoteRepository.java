@@ -36,8 +36,7 @@ public interface NoteRepository {
      * 
      * @param note
      *            the note
-     * @return {@value true} if the operation executed successfully,
-     * 				{@value false} otherwise.
+     * @return true} if the operation executed successfully, false} otherwise.
      */
     public boolean add(Note note);
 
@@ -46,8 +45,7 @@ public interface NoteRepository {
      * 
      * @param note
      *            the note
-     * @return {@value true} if the operation executed successfully,
-     * 				{@value false} otherwise.
+     * @return true} if the operation executed successfully, false} otherwise.
      */
     public boolean update(Note note);
 
@@ -56,8 +54,7 @@ public interface NoteRepository {
      * 
      * @param note
      *            the note
-     * @return {@value true} if the operation executed successfully,
-     * 				{@value false} otherwise.
+     * @return true} if the operation executed successfully, false} otherwise.
      */
     public boolean delete(Note note);
 

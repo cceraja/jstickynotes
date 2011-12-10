@@ -8,7 +8,6 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 
-
 public class Widgets {
     private static final String ESC_ACTION = "ESC_ACTION";
 

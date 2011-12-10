@@ -66,9 +66,9 @@ import jrico.jstickynotes.util.Screen;
 
 public class JStickyNotes implements Runnable, PropertyChangeListener, ActionListener {
 
-	private static Logger logger = Logger.getLogger(JStickyNotes.class.getName());
-	
-	public static final String DIRECTORY = System.getProperty("user.home") + File.separator + ".jstickynotes";
+    private static Logger logger = Logger.getLogger(JStickyNotes.class.getName());
+
+    public static final String DIRECTORY = System.getProperty("user.home") + File.separator + ".jstickynotes";
 
     public static final ResourceBundle BUNDLE = ResourceBundle.getBundle("jrico.jstickynotes.resource.jstickynotes");
 
@@ -86,7 +86,7 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     public static final int ALWAYS_ON_TOP = 1;
     public static final int VISIBLE = 2;
     public static final int ALL = 3;
-    
+
     private static final JStickyNotes INSTANCE = new JStickyNotes();
 
     private PreferencesManager preferencesManager;
@@ -141,8 +141,8 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
                 JSTICKYNOTES_TEXT, popup);
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseAdapter() {
-            	@Override
-            	public void mousePressed(MouseEvent me) {
+                @Override
+                public void mousePressed(MouseEvent me) {
                     if (me.getButton() == MouseEvent.BUTTON1) {
                         frame.toFront();
                     }
@@ -263,7 +263,7 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
             }
         }
     }
-    
+
     public JFrame getFrame() {
         return frame;
     }
@@ -272,85 +272,83 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
         return INSTANCE;
     }
 
-    public boolean isOnline(){
-    	return online;
+    public boolean isOnline() {
+        return online;
     }
-    
-    public boolean connectRemote(boolean forceReconnection){
-    	logger.entering(this.getClass().getName(), "connectRemote", forceReconnection);
-    	if ( forceReconnection) {
-    		this.disconnectRemote();
-    	}
-    	// TODO get/set the autoLogin property from GUI
-    	if ( this.login( preferencesManager.getPreferences().isAutoLogin() 
-    			&& preferencesManager.getPreferences().getUsername() != null 
-    			&& preferencesManager.getPreferences().getPassword() != null ) ) {
-    		// TODO show some GUI as ONLINE
-    		online = true;
-    	}
-    	logger.exiting(this.getClass().getName(), "connectRemote", online);
-    	return online;
+
+    public boolean connectRemote(boolean forceReconnection) {
+        logger.entering(this.getClass().getName(), "connectRemote", forceReconnection);
+        if (forceReconnection) {
+            this.disconnectRemote();
+        }
+        // TODO get/set the autoLogin property from GUI
+        if (this.login(preferencesManager.getPreferences().isAutoLogin()
+                && preferencesManager.getPreferences().getUsername() != null
+                && preferencesManager.getPreferences().getPassword() != null)) {
+            // TODO show some GUI as ONLINE
+            online = true;
+        }
+        logger.exiting(this.getClass().getName(), "connectRemote", online);
+        return online;
     }
-    
-    public void disconnectRemote(){
-    	logger.entering(this.getClass().getName(), "disconnectRemote");
-    	noteManager.disconnectRemote();
-    	online = false;
-    	// TODO show some GUI as OFFLINE
-    	logger.exiting(this.getClass().getName(), "disconnectRemote");
+
+    public void disconnectRemote() {
+        logger.entering(this.getClass().getName(), "disconnectRemote");
+        noteManager.disconnectRemote();
+        online = false;
+        // TODO show some GUI as OFFLINE
+        logger.exiting(this.getClass().getName(), "disconnectRemote");
     }
-    
-    private void showErrorMessage(String msg){
-    	final JOptionPane optionPane = new JOptionPane(msg,
-				JOptionPane.ERROR_MESSAGE, JOptionPane.DEFAULT_OPTION);
-		JDialog dialog = optionPane.createDialog(frame, "Error");
-		Screen.center(dialog);
-		dialog.setVisible(true);
-		optionPane.getValue();
+
+    private void showErrorMessage(String msg) {
+        final JOptionPane optionPane = new JOptionPane(msg, JOptionPane.ERROR_MESSAGE, JOptionPane.DEFAULT_OPTION);
+        JDialog dialog = optionPane.createDialog(frame, "Error");
+        Screen.center(dialog);
+        dialog.setVisible(true);
+        optionPane.getValue();
     }
-    
+
     public void pushMessage(Object msg) {
-    	logger.entering(this.getClass().getName(), "pushMessage");
-    	if ( msg instanceof Exception) {
-    		Exception e = (Exception) msg;
-    		logger.finer("Message received: " + e.getMessage());
-    		this.disconnectRemote();
-			this.showErrorMessage(e.getMessage());
-			// TODO we need a GUI element for re-connect
-			// TODO it would be good to have a re-connection handler in case of
-			// disconnection
-    	}
-    	logger.exiting(this.getClass().getName(), "pushMessage");
+        logger.entering(this.getClass().getName(), "pushMessage");
+        if (msg instanceof Exception) {
+            Exception e = (Exception) msg;
+            logger.finer("Message received: " + e.getMessage());
+            this.disconnectRemote();
+            this.showErrorMessage(e.getMessage());
+            // TODO we need a GUI element for re-connect
+            // TODO it would be good to have a re-connection handler in case of
+            // disconnection
+        }
+        logger.exiting(this.getClass().getName(), "pushMessage");
     }
-    
-    private boolean login(boolean silent){
-    	logger.entering(this.getClass().getName(), "login", silent);
-    	boolean logged = false;
-    	login_until_connect_or_cancel:
-    	while (true) {
-    		// silent is valid only the first time, if an error occurs then the attended login
-    		// will be activated
-    		if (!silent) {
-    			Pair<String, String> credentials = new LoginHandler(preferencesManager.getPreferences()).login();
-        		if ( credentials != null) {
-        			preferencesManager.getPreferences().setUsername(credentials.getObjectA());
-            		preferencesManager.getPreferences().setPassword(credentials.getObjectB());
-        		} else {
-        			//login cancelled
-        			break login_until_connect_or_cancel;
-        		}
-    		}
-    		if ( !noteManager.connectRemote()) {
-    			silent = false; // deactivate silent
-    		} else {
-    			logged = true;
-    			break login_until_connect_or_cancel;
-    		}
-    	}
-    	logger.exiting(this.getClass().getName(), "login", logged);
-    	return logged;
+
+    private boolean login(boolean silent) {
+        logger.entering(this.getClass().getName(), "login", silent);
+        boolean logged = false;
+        login_until_connect_or_cancel: while (true) {
+            // silent is valid only the first time, if an error occurs then the attended login
+            // will be activated
+            if (!silent) {
+                Pair<String, String> credentials = new LoginHandler(preferencesManager.getPreferences()).login();
+                if (credentials != null) {
+                    preferencesManager.getPreferences().setUsername(credentials.getObjectA());
+                    preferencesManager.getPreferences().setPassword(credentials.getObjectB());
+                } else {
+                    // login cancelled
+                    break login_until_connect_or_cancel;
+                }
+            }
+            if (!noteManager.connectRemote()) {
+                silent = false; // deactivate silent
+            } else {
+                logged = true;
+                break login_until_connect_or_cancel;
+            }
+        }
+        logger.exiting(this.getClass().getName(), "login", logged);
+        return logged;
     }
-    
+
     private class StoredNotesRetriever extends SwingWorker<Void, List<Note>> {
         @Override
         @SuppressWarnings("unchecked")
@@ -379,42 +377,41 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
             }
         }
     }
-    
-   private static void configureLogger() {
-	   // TODO for debugging purposes..., set to LEVEL.info for public releases
-	   Logger logger = Logger.getLogger(JStickyNotes.class.getPackage().getName());
-	   ConsoleHandler cHandler = new ConsoleHandler();
-   		cHandler.setFormatter(new Formatter() {
-   		  private Format formatter = new SimpleDateFormat("yyyy/MM/dd h:mm a");
-   	      public String format(LogRecord record) {
-   	    	 String parameters = "";
-   	    	 if ( record.getParameters() != null) {
-   	    		 if (record.getParameters().length > 1) {
-   	    			 parameters += "[";
-   	    		 }
-   	    		 for ( Object param : record.getParameters()) {
-   	    			 parameters += param.toString();
-   	    		 }
-   	    		if (record.getParameters().length > 1) {
-   	    			parameters += "]";
-   	    		}
-   	    	 }
-   	    	  
-   	    	 return formatter.format(new Date(record.getMillis())) 
-   	    	    + " " + record.getLevel() + " "
-   	            + record.getSourceClassName() + " "
-   	            + record.getSourceMethodName() + " : "
-   	            + record.getMessage() + " " + parameters + "\n";
-   	      }
-   	    });
-   		cHandler.setLevel(Level.FINER);
-   		logger.addHandler(cHandler);
-   		logger.setLevel(Level.FINER);
-   }
+
+    private static void configureLogger() {
+        // TODO for debugging purposes..., set to LEVEL.info for public releases
+        Logger logger = Logger.getLogger(JStickyNotes.class.getPackage().getName());
+        ConsoleHandler cHandler = new ConsoleHandler();
+        cHandler.setFormatter(new Formatter() {
+            private Format formatter = new SimpleDateFormat("yyyy/MM/dd h:mm a");
+
+            public String format(LogRecord record) {
+                String parameters = "";
+                if (record.getParameters() != null) {
+                    if (record.getParameters().length > 1) {
+                        parameters += "[";
+                    }
+                    for (Object param : record.getParameters()) {
+                        parameters += param.toString();
+                    }
+                    if (record.getParameters().length > 1) {
+                        parameters += "]";
+                    }
+                }
+
+                return formatter.format(new Date(record.getMillis())) + " " + record.getLevel() + " "
+                        + record.getSourceClassName() + " " + record.getSourceMethodName() + " : "
+                        + record.getMessage() + " " + parameters + "\n";
+            }
+        });
+        cHandler.setLevel(Level.FINER);
+        logger.addHandler(cHandler);
+        logger.setLevel(Level.FINER);
+    }
 
     public static void main(String[] args) throws Exception {
-    	configureLogger();
+        configureLogger();
         logger.finer("Starting app...");
-    	SwingUtilities.invokeLater(getInstance());
+        SwingUtilities.invokeLater(getInstance());
     }
 }
