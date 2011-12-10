@@ -322,6 +322,23 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
         logger.exiting(this.getClass().getName(), "pushMessage");
     }
 
+    public void syncNow() {
+        if (this.isOnline()) {
+            List<Note> syncNotes = noteManager.syncRemoteNotes();
+            for (Note note : syncNotes) {
+                if (stickyNotes.containsKey(note)) {
+                    StickyNote oldStickyNote = stickyNotes.get(note);
+                    oldStickyNote.dispose();
+                }
+                note.addPropertyChangeListener(Note.STATUS_PROPERTY, JStickyNotes.this);
+                StickyNote stickyNote = new StickyNote(frame, note);
+                stickyNote.addPropertyChangeListener(StickyNote.CHILD_WINDOW_OPENED, JStickyNotes.this);
+                stickyNotes.put(note, stickyNote);
+            }
+        }
+
+    }
+
     private boolean login(boolean silent) {
         logger.entering(this.getClass().getName(), "login", silent);
         boolean logged = false;
