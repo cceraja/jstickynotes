@@ -204,6 +204,8 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
                     showNotes(showMode - 1);
                 } else if (controlDown && keyCode == KeyEvent.VK_N) {
                     createNote();
+                } else if (keyCode == KeyEvent.VK_F5) {
+                    new Synchronizer().execute();
                 }
             }
         });
