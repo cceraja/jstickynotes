@@ -85,6 +85,7 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
     private char echoChar;
     private JLabel hostLabel;
     private JTextField hostText;
+    private JCheckBox autoLoginCheckbox;
 
     public PreferencesDialog(JFrame owner, Preferences preferences) {
         super(owner);
@@ -103,6 +104,7 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
             passwordText.setEnabled(emailEnabledCheckbox.isSelected());
             showPasswordCheckbox.setEnabled(emailEnabledCheckbox.isSelected());
             passwordStoredCheckbox.setEnabled(emailEnabledCheckbox.isSelected());
+            autoLoginCheckbox.setEnabled(emailEnabledCheckbox.isSelected());
         } else if (e.getSource() == showPasswordCheckbox) {
             passwordText.setEchoChar(showPasswordCheckbox.isSelected() ? 0 : echoChar);
         }
@@ -134,6 +136,7 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
         preferences.setPasswordStored(passwordStoredCheckbox.isSelected());
         preferences.setPassword(new String(passwordText.getPassword()));
         preferences.setEmailEnabled(emailEnabledCheckbox.isSelected());
+        preferences.setAutoLogin(autoLoginCheckbox.isSelected());
         setVisible(false);
     }
 
@@ -173,6 +176,7 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
 
         okButton.setText(bundle.getString("PreferencesDialog.okButton.text"));
         okButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 okButtonActionPerformed(e);
             }
@@ -181,6 +185,7 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
 
         cancelButton.setText(bundle.getString("PreferencesDialog.cancelButton.text"));
         cancelButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 cancelButtonActionPerformed(e);
             }
@@ -197,6 +202,7 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
 
         colorButton.setText(bundle.getString("PreferencesDialog.colorButton.text"));
         colorButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 colorButtonActionPerformed(e);
             }
@@ -206,6 +212,7 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
 
         fontButton.setText(bundle.getString("PreferencesDialog.fontButton.text"));
         fontButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 fontButtonActionPerformed(e);
             }
@@ -230,7 +237,8 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
                 FormFactory.DEFAULT_ROWSPEC, FormFactory.UNRELATED_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
                 FormFactory.LINE_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.LINE_GAP_ROWSPEC,
                 FormFactory.DEFAULT_ROWSPEC, FormFactory.LINE_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC,
-                FormFactory.LINE_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, }));
+                FormFactory.LINE_GAP_ROWSPEC, FormFactory.DEFAULT_ROWSPEC, FormFactory.RELATED_GAP_ROWSPEC,
+                FormFactory.DEFAULT_ROWSPEC, }));
 
         emailDescriptionLabel = new JLabel(bundle.getString("PreferencesDialog.emailDescriptionLabel.text")); //$NON-NLS-1$
         emailPanel.add(emailDescriptionLabel, "1, 1, 5, 1");
@@ -276,6 +284,10 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
         passwordStoredCheckbox.setEnabled(false);
         emailPanel.add(passwordStoredCheckbox, "1, 11, 5, 1");
 
+        autoLoginCheckbox = new JCheckBox(bundle.getString("PreferencesDialog.autoLoginCheckbox.text")); //$NON-NLS-1$
+        autoLoginCheckbox.setEnabled(false);
+        emailPanel.add(autoLoginCheckbox, "1, 13, 3, 1");
+
         colorLabel.setOpaque(true);
         colorLabel.setBackground(preferences.getDefaultNoteColor());
         fontLabel.setFont(preferences.getDefaultFont());
@@ -284,6 +296,7 @@ public class PreferencesDialog extends JDialog implements ChangeListener {
         usernameText.setText(preferences.getUsername());
         emailEnabledCheckbox.setSelected(preferences.isEmailEnabled());
         passwordStoredCheckbox.setSelected(preferences.isPasswordStored());
+        autoLoginCheckbox.setSelected(preferences.isAutoLogin());
 
         if (preferences.isPasswordStored()) {
             passwordText.setText(preferences.getPassword());

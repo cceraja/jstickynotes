@@ -43,6 +43,7 @@ public class StickyNoteHeader extends JPanel implements PropertyChangeListener {
     public static final String DELETE_DIALOG_TEXT = BUNDLE.getString("StickyNoteHeader.deleteDialog.text");
     public static final String DELETE_DIALOG_TITLE_TEXT = BUNDLE.getString("StickyNoteHeader.deleteDialogTitle.text");
     public static final String MAIL_TEXT = BUNDLE.getString("StickyNoteHeader.mailTooltip.text");
+    public static final String MAIL_STORED_TEXT = BUNDLE.getString("StickyNoteHeader.mailStoredTooltip.text");
     public static final String CHANGE_FONT_TEXT = BUNDLE.getString("StickyNoteHeader.changeFontTooltip.text");
     public static final String CHANGE_COLOR_TEXT = BUNDLE.getString("StickyNoteHeader.changeColorTooltip.text");
     public static final String CHANGE_COLOR_DIALOG_TITLE_TEXT = BUNDLE
@@ -82,11 +83,15 @@ public class StickyNoteHeader extends JPanel implements PropertyChangeListener {
                 setForeground(note.getFontColor());
             } else if (Note.COLOR_PROPERTY.equals(property)) {
                 setBackground(note.getColor());
+            } else if (Note.TYPE_PROPERTY.equals(property)) {
+                mailLabel.setEnabled(note.getType() != Note.REMOTE_TYPE);
             }
         }
     }
 
     private void initComponents() {
+        boolean remote = note.getType() == Note.REMOTE_TYPE;
+
         // create header actions
         ActionPerformer actionPerformer = new ActionPerformer();
         deleteLabel = new JLabel(Icon.DELETE.getImageIcon());
@@ -96,10 +101,12 @@ public class StickyNoteHeader extends JPanel implements PropertyChangeListener {
         add(deleteLabel);
 
         mailLabel = new JLabel(Icon.MAIL.getImageIcon());
-        mailLabel.setToolTipText(MAIL_TEXT);
+        mailLabel.setToolTipText(remote ? MAIL_STORED_TEXT : MAIL_TEXT);
         mailLabel.setBorder(BorderFactory.createEmptyBorder());
-        mailLabel.addMouseListener(actionPerformer);
-        // TODO uncomment the next line to add mail storage support
+        mailLabel.setEnabled(note.getType() == Note.LOCAL_TYPE);
+        if (!remote) {
+            mailLabel.addMouseListener(actionPerformer);
+        }
         add(mailLabel);
 
         fontLabel = new JLabel(Icon.FONT.getImageIcon());
