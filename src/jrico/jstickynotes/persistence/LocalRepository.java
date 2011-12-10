@@ -55,7 +55,10 @@ public class LocalRepository implements NoteRepository {
     @Override
     public boolean delete(Note note) {
         File file = new File(DIRECTORY + File.separator + note.getId());
-        return file.delete();
+        if (file.exists()) {
+        	return file.delete();
+        }
+        return true;
     }
 
     @Override

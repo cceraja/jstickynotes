@@ -528,4 +528,15 @@ public class Note extends Bean implements Serializable {
     public int compareVersionTo(Note note){
     	return this.getVersion() - note.getVersion();
     }
+    
+    @Override
+    public String toString(){
+    	return "[Note id=" + this.getId() + ", type=" + this.getType() 
+    			+ ", version=" + this.getVersion() + ", status=" + this.getStatus() 
+    			+ ", color=" + this.getColor() + ", relativeLocation=" + this.getRelativeLocation() 
+    			+ ", size=" + this.getSize() + ", visible=" + this.isVisible() + ", alwaysOnTop=" 
+    			+ this.isAlwaysOnTop() + ", font=" + this.getFont() + ", fontColor=" 
+    			+ this.getFontColor() +  ", text=" + this.getText() +  ", categories=" 
+    			+ this.getCategories() + "]";
+    }
 }

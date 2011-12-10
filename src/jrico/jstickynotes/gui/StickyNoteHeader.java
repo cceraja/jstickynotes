@@ -100,7 +100,7 @@ public class StickyNoteHeader extends JPanel implements PropertyChangeListener {
         mailLabel.setBorder(BorderFactory.createEmptyBorder());
         mailLabel.addMouseListener(actionPerformer);
         // TODO uncomment the next line to add mail storage support
-        // add(mailLabel);
+        add(mailLabel);
 
         fontLabel = new JLabel(Icon.FONT.getImageIcon());
         fontLabel.setToolTipText(CHANGE_FONT_TEXT);
