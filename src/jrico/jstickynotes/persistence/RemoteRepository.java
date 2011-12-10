@@ -21,6 +21,8 @@ package jrico.jstickynotes.persistence;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
@@ -29,6 +31,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeMessage;
 
+import jrico.jstickynotes.JStickyNotes;
 import jrico.jstickynotes.model.Note;
 import jrico.jstickynotes.util.XmlReaderWriter;
 
@@ -40,7 +43,9 @@ import jrico.jstickynotes.util.XmlReaderWriter;
  */
 public class RemoteRepository implements NoteRepository {
 
-    private static final String FOLDER_NAME = "JStickyNotes";
+    private static final Logger logger = Logger.getLogger(RemoteRepository.class.getName());
+	
+	private static final String FOLDER_NAME = "JStickyNotes";
 
     private Session session;
     private Store store;
@@ -49,126 +54,132 @@ public class RemoteRepository implements NoteRepository {
     private String host = "imap.gmail.com";
     private String username = "";
     private String password = "";
+    private boolean connected;
 
     @Override
     public boolean add(Note note) {
-        boolean alreadyOpened = false;
+        logger.entering(this.getClass().getName(), "add", note);
         boolean success = true;
-        try {
-            alreadyOpened = openSession();
-            delete(note);
+        if ( this.isConnected() ) {
+        	try {
+        		delete(note);
 
-            MimeMessage message = new MimeMessage(session);
-            String xml = XmlReaderWriter.writeObjectsToString(note, note.getCategories());
-            message.setSubject(String.valueOf(note.getId()));
-            message.setText(xml);
-            message.saveChanges();
-            folder.appendMessages(new Message[] { message });
-        } catch (Exception e) {
-            e.printStackTrace();
-            success = false;
-        } finally {
-            if (!alreadyOpened) {
-                closeSession();
-            }
+        		MimeMessage message = new MimeMessage(session);
+        		String xml = XmlReaderWriter.writeObjectsToString(note, note.getCategories());
+        		message.setSubject(String.valueOf(note.getId()));
+        		message.setText(xml);
+        		message.saveChanges();
+        		folder.appendMessages(new Message[] { message });
+        	} catch (Exception e) {
+        		logger.throwing(this.getClass().getName(), "delete", e);
+        		success = false;
+        		this.turnOffline(e);
+        	}
+        } else {
+        	success = false;
         }
+        logger.exiting(this.getClass().getName(), "add", success);
         return success;
     }
 
     @Override
     public boolean delete(Note note) {
-        boolean alreadyOpened = false;
+    	logger.entering(this.getClass().getName(), "delete", note);
+    	
         boolean success = true;
-        try {
-            alreadyOpened = openSession();
-            Message messages[] = folder.getMessages();
-            boolean deleted = false;
-            for (int i = 0; i < messages.length && !deleted; i++) {
-                Message message = messages[i];
-                String subject = message.getSubject();
-                if (subject != null && !subject.trim().equals("")) {
-                    long id = Long.parseLong(subject);
-                    if (id == note.getId()) {
-                        message.setFlag(Flag.DELETED, true);
-                        folder.expunge();
-                        deleted = true;
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            success = false;
-        } finally {
-            if (!alreadyOpened) {
-                closeSession();
-            }
+        if ( this.isConnected() ) {
+        	try {
+        		Message messages[] = folder.getMessages();
+        		boolean deleted = false;
+        		for (int i = 0; i < messages.length; i++) {
+        			Message message = messages[i];
+        			String subject = message.getSubject();
+        			if (subject != null && !subject.trim().equals("")) {
+        				long id = Long.parseLong(subject);
+        				if (id == note.getId()) {
+        					message.setFlag(Flag.DELETED, true);
+        					deleted = true;
+        				}
+        			}
+        		}
+        		if (deleted) {
+        			Message[] deletedMsgs = folder.expunge();
+        			logger.log(Level.FINER, "deleted:", deletedMsgs);
+        		}
+        	} catch (Exception e) {
+        		logger.throwing(this.getClass().getName(), "delete", e);
+        		success = false;
+        		this.turnOffline(e);
+        	} 
+        } else {
+        	success = false;
         }
+        logger.exiting(this.getClass().getName(), "delete", success);
         return success;
     }
 
     @Override
     public List<Note> retrieve() {
         List<Note> notes = new ArrayList<Note>();
-        boolean alreadyOpened = false;
-        try {
-            alreadyOpened = openSession();
-
-            Message messages[] = folder.getMessages();
-            for (int i = 0, n = messages.length; i < n; i++) {
-                Note note = XmlReaderWriter.readObjectFromString(messages[i].getContent().toString());
-                if (note != null) {
-                    notes.add(note);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (!alreadyOpened) {
-                closeSession();
-            }
+        if ( this.isConnected() ) {
+        	try {
+        		Message messages[] = folder.getMessages();
+        		for (int i = 0, n = messages.length; i < n; i++) {
+        			Note note = XmlReaderWriter.readObjectFromString(messages[i].getContent().toString());
+        			if (note != null) {
+        				notes.add(note);
+        			}
+        		}
+        	} catch (Exception e) {
+        		e.printStackTrace();
+        		this.turnOffline(e);
+        	} 
         }
         return notes;
     }
 
     @Override
     public boolean update(Note note) {
-         if ( delete(note) ) {
-        	return add(note);
-         }
-         return false;
+    	logger.entering(this.getClass().getName(), "update", note); 
+    	boolean success = add(note);
+    	logger.exiting(this.getClass().getName(), "update", success);
+        return success;
     }
 
-    public boolean openSession() throws Exception {
-        boolean alreadyOpened = true;
-        // Get session
-        if (session == null) {
-            alreadyOpened = false;
-            session = Session.getDefaultInstance(new Properties(), null);
-        }
+    public boolean openSession() {
+        try {
+        	// Get session
+        	if (session == null) {
+        		session = Session.getDefaultInstance(new Properties(), null);
+        	}
 
-        // Get the store
-        if (store == null) {
-            alreadyOpened = false;
-            store = session.getStore("imaps");
-            store.connect(host, username, password);
-        }
+        	// Get the store
+        	if (store == null) {
+        		store = session.getStore("imaps");
+        		store.connect(host, username, password);
+        	}
 
-        // Get folder
-        if (folder == null) {
-            alreadyOpened = false;
-            folder = store.getFolder(FOLDER_NAME);
+        	// Get folder
+        	if (folder == null) {
+        		folder = store.getFolder(FOLDER_NAME);
 
-            if (!folder.exists()) {
-                System.out.println("Creating folder");
-                folder.create(Folder.HOLDS_MESSAGES);
-            }
-            folder.open(Folder.READ_WRITE);
+        		if (!folder.exists()) {
+        			logger.finer("Creating folder " + Folder.HOLDS_MESSAGES + "on server." );
+        			folder.create(Folder.HOLDS_MESSAGES);
+        		}
+        		folder.open(Folder.READ_WRITE);
+        		connected = true;
+        	}
+        } catch (Exception e) {
+        	logger.throwing(this.getClass().getName(), "openSession", e);
+        	turnOffline(e);
         }
-        return alreadyOpened;
+        return connected;
     }
 
     public void closeSession() {
-        try {
+    	connected = false;
+    	try {
             if (folder != null) {
                 folder.close(false);
             }
@@ -176,12 +187,24 @@ public class RemoteRepository implements NoteRepository {
                 store.close();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.throwing(this.getClass().getName(), "closeSession", e);
         } finally {
             folder = null;
             store = null;
             session = null;
         }
+    }
+    
+    public boolean isConnected(){
+    	if ( connected && store != null && store.isConnected()) {
+    		connected = true;
+    	} else if (connected) {
+    		//the connection got lost, let know the app
+    		logger.finer("connected=" + connected + ", store=" + store + ", isConnected=" + store.isConnected());
+    		this.turnOffline(new Exception("Couldn't reach the " +
+    				"imap server, connection lost?"));
+    	}
+    	return connected;
     }
 
     public void setHost(String host) {
@@ -194,5 +217,12 @@ public class RemoteRepository implements NoteRepository {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    private void turnOffline(Exception e){
+    	connected = false;
+    	closeSession();
+    	JStickyNotes.getInstance().pushMessage(e);
+    	
     }
 }
