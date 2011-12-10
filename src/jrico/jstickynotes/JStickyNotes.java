@@ -89,9 +89,9 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
 
     private static final JStickyNotes INSTANCE = new JStickyNotes();
 
-    private PreferencesManager preferencesManager;
-    private NoteManager noteManager;
-    private Map<Note, StickyNote> stickyNotes;
+    private final PreferencesManager preferencesManager;
+    private final NoteManager noteManager;
+    private final Map<Note, StickyNote> stickyNotes;
     private JFrame frame;
     private StickyNote childWindowParent;
     private int showMode;
@@ -282,9 +282,9 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
             this.disconnectRemote();
         }
         // TODO get/set the autoLogin property from GUI
-        if (this.login(preferencesManager.getPreferences().isAutoLogin()
-                && preferencesManager.getPreferences().getUsername() != null
-                && preferencesManager.getPreferences().getPassword() != null)) {
+        if (!online && preferencesManager.getPreferences().getUsername() != null
+                && preferencesManager.getPreferences().getPassword() != null
+                && this.login(preferencesManager.getPreferences().isAutoLogin())) {
             // TODO show some GUI as ONLINE
             online = true;
         }
@@ -383,8 +383,9 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
         Logger logger = Logger.getLogger(JStickyNotes.class.getPackage().getName());
         ConsoleHandler cHandler = new ConsoleHandler();
         cHandler.setFormatter(new Formatter() {
-            private Format formatter = new SimpleDateFormat("yyyy/MM/dd h:mm a");
+            private final Format formatter = new SimpleDateFormat("yyyy/MM/dd h:mm a");
 
+            @Override
             public String format(LogRecord record) {
                 String parameters = "";
                 if (record.getParameters() != null) {
