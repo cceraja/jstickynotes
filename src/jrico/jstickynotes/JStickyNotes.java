@@ -59,6 +59,7 @@ import jrico.jstickynotes.gui.LoginHandler;
 import jrico.jstickynotes.gui.PreferencesDialog;
 import jrico.jstickynotes.gui.StickyNote;
 import jrico.jstickynotes.model.Note;
+import jrico.jstickynotes.model.Preferences;
 import jrico.jstickynotes.persistence.NoteManager;
 import jrico.jstickynotes.persistence.PreferencesManager;
 import jrico.jstickynotes.util.Pair;
@@ -73,9 +74,12 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     public static final ResourceBundle BUNDLE = ResourceBundle.getBundle("jrico.jstickynotes.resource.jstickynotes");
 
     public static final String JSTICKYNOTES_TEXT = BUNDLE.getString("JStickyNotes.text");
+    public static final String ONLINE_TEXT = BUNDLE.getString("JStickyNotes.onlineItem.text");
+    public static final String OFFLINE_TEXT = BUNDLE.getString("JStickyNotes.offlineItem.text");
     public static final String CREATE_NOTE_TEXT = BUNDLE.getString("JStickyNotes.createNoteItem.text");
     public static final String SHOW_ALL_NOTES_TEXT = BUNDLE.getString("JStickyNotes.showAllItem.text");
     public static final String HIDE_ALL_NOTES_TEXT = BUNDLE.getString("JStickyNotes.hideAllItem.text");
+    public static final String SYNCHRONIZE_TEXT = BUNDLE.getString("JStickyNotes.synchronizeItem.text");
     public static final String PREFERENCES_TEXT = BUNDLE.getString("JStickyNotes.preferencesItem.text");
     public static final String ABOUT_TEXT = BUNDLE.getString("JStickyNotes.aboutItem.text");
     public static final String ABOUT_DIALOG_TEXT = BUNDLE.getString("JStickyNotes.aboutDialog.text");
@@ -96,6 +100,8 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     private StickyNote childWindowParent;
     private int showMode;
     private boolean online;
+    private MenuItem statusMenuItem;
+    private MenuItem synchronizeMenuItem;
 
     private JStickyNotes() {
         File directory = new File(DIRECTORY);
@@ -106,6 +112,7 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
         preferencesManager = new PreferencesManager();
         noteManager = new NoteManager(preferencesManager.getPreferences());
         stickyNotes = new HashMap<Note, StickyNote>();
+        preferencesManager.getPreferences().addPropertyChangeListener(Preferences.EMAIL_ENABLED_PROPERTY, this);
     }
 
     @Override
@@ -114,6 +121,10 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
             SystemTray tray = SystemTray.getSystemTray();
 
             PopupMenu popup = new PopupMenu();
+            statusMenuItem = new MenuItem(OFFLINE_TEXT);
+            statusMenuItem.addActionListener(this);
+            popup.add(statusMenuItem);
+            popup.addSeparator();
             MenuItem createNoteItem = new MenuItem(CREATE_NOTE_TEXT);
             createNoteItem.addActionListener(this);
             popup.add(createNoteItem);
@@ -125,10 +136,15 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
             hideAllItem.addActionListener(this);
             popup.add(hideAllItem);
             popup.addSeparator();
+            synchronizeMenuItem = new MenuItem(SYNCHRONIZE_TEXT);
+            synchronizeMenuItem.addActionListener(this);
+            synchronizeMenuItem.setEnabled(preferencesManager.getPreferences().isEmailEnabled());
+            synchronizeMenuItem.setEnabled(false);
+            popup.add(synchronizeMenuItem);
+            popup.addSeparator();
             MenuItem preferencesItem = new MenuItem(PREFERENCES_TEXT);
             preferencesItem.addActionListener(this);
             popup.add(preferencesItem);
-            popup.addSeparator();
             MenuItem aboutItem = new MenuItem(ABOUT_TEXT);
             aboutItem.addActionListener(this);
             popup.add(aboutItem);
@@ -200,22 +216,37 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
         Object source = pce.getSource();
+
         if (source instanceof Note && pce.getNewValue().equals(Note.DELETED_STATUS)) {
             stickyNotes.remove(source);
         } else if (source instanceof StickyNote) {
             childWindowParent = ((Boolean) pce.getNewValue()) ? (StickyNote) source : null;
+        } else if (source instanceof Preferences) {
+            boolean emailEnabled = (Boolean) pce.getNewValue();
+            synchronizeMenuItem.setEnabled(emailEnabled);
+
+            if (!emailEnabled && online) {
+                disconnectRemote();
+            }
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String label = ((MenuItem) e.getSource()).getLabel();
-        if (CREATE_NOTE_TEXT.equals(label)) {
+
+        if (ONLINE_TEXT.equals(label)) {
+            disconnectRemote();
+        } else if (OFFLINE_TEXT.equals(label)) {
+            connectRemote(false);
+        } else if (CREATE_NOTE_TEXT.equals(label)) {
             createNote();
         } else if (SHOW_ALL_NOTES_TEXT.equals(label)) {
             showNotes(ALL);
         } else if (HIDE_ALL_NOTES_TEXT.equals(label)) {
             showNotes(NONE);
+        } else if (SYNCHRONIZE_TEXT.equals(label)) {
+            new Synchronizer().execute();
         } else if (PREFERENCES_TEXT.equals(label)) {
             new PreferencesDialog(frame, preferencesManager.getPreferences()).setVisible(true);
         } else if (ABOUT_TEXT.equals(label)) {
@@ -281,11 +312,12 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
         if (forceReconnection) {
             this.disconnectRemote();
         }
-        // TODO get/set the autoLogin property from GUI
+
         if (!online && preferencesManager.getPreferences().getUsername() != null
                 && preferencesManager.getPreferences().getPassword() != null
                 && this.login(preferencesManager.getPreferences().isAutoLogin())) {
-            // TODO show some GUI as ONLINE
+            statusMenuItem.setLabel(ONLINE_TEXT);
+            synchronizeMenuItem.setEnabled(true);
             online = true;
         }
         logger.exiting(this.getClass().getName(), "connectRemote", online);
@@ -296,7 +328,8 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
         logger.entering(this.getClass().getName(), "disconnectRemote");
         noteManager.disconnectRemote();
         online = false;
-        // TODO show some GUI as OFFLINE
+        statusMenuItem.setLabel(OFFLINE_TEXT);
+        synchronizeMenuItem.setEnabled(false);
         logger.exiting(this.getClass().getName(), "disconnectRemote");
     }
 
@@ -315,28 +348,23 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
             logger.finer("Message received: " + e.getMessage());
             this.disconnectRemote();
             this.showErrorMessage(e.getMessage());
-            // TODO we need a GUI element for re-connect
             // TODO it would be good to have a re-connection handler in case of
             // disconnection
         }
         logger.exiting(this.getClass().getName(), "pushMessage");
     }
 
-    public void syncNow() {
-        if (this.isOnline()) {
-            List<Note> syncNotes = noteManager.syncRemoteNotes();
-            for (Note note : syncNotes) {
-                if (stickyNotes.containsKey(note)) {
-                    StickyNote oldStickyNote = stickyNotes.get(note);
-                    oldStickyNote.dispose();
-                }
-                note.addPropertyChangeListener(Note.STATUS_PROPERTY, JStickyNotes.this);
-                StickyNote stickyNote = new StickyNote(frame, note);
-                stickyNote.addPropertyChangeListener(StickyNote.CHILD_WINDOW_OPENED, JStickyNotes.this);
-                stickyNotes.put(note, stickyNote);
+    private void createStickyNotes(List<Note> notes) {
+        for (Note note : notes) {
+            if (stickyNotes.containsKey(note)) {
+                StickyNote oldStickyNote = stickyNotes.get(note);
+                oldStickyNote.dispose();
             }
+            note.addPropertyChangeListener(Note.STATUS_PROPERTY, JStickyNotes.this);
+            StickyNote stickyNote = new StickyNote(frame, note);
+            stickyNote.addPropertyChangeListener(StickyNote.CHILD_WINDOW_OPENED, JStickyNotes.this);
+            stickyNotes.put(note, stickyNote);
         }
-
     }
 
     private boolean login(boolean silent) {
@@ -372,7 +400,11 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
         protected Void doInBackground() throws Exception {
             publish(noteManager.getLocalStoredNotes());
             logger.finer("Local stored notes retrieved");
-            JStickyNotes.this.connectRemote(false);
+
+            if (preferencesManager.getPreferences().isEmailEnabled()) {
+                JStickyNotes.this.connectRemote(false);
+            }
+
             publish(noteManager.getRemoteStoredNotes());
             logger.finer("Remote stored notes retrieved");
             return null;
@@ -381,17 +413,18 @@ public class JStickyNotes implements Runnable, PropertyChangeListener, ActionLis
         @Override
         protected void process(List<List<Note>> chunks) {
             for (List<Note> notes : chunks) {
-                for (Note note : notes) {
-                    if (stickyNotes.containsKey(note)) {
-                        StickyNote oldStickyNote = stickyNotes.get(note);
-                        oldStickyNote.dispose();
-                    }
-                    note.addPropertyChangeListener(Note.STATUS_PROPERTY, JStickyNotes.this);
-                    StickyNote stickyNote = new StickyNote(frame, note);
-                    stickyNote.addPropertyChangeListener(StickyNote.CHILD_WINDOW_OPENED, JStickyNotes.this);
-                    stickyNotes.put(note, stickyNote);
-                }
+                createStickyNotes(notes);
             }
+        }
+    }
+
+    private class Synchronizer extends StoredNotesRetriever {
+        @Override
+        @SuppressWarnings("unchecked")
+        protected Void doInBackground() throws Exception {
+            publish(noteManager.syncRemoteNotes());
+            logger.finer("remote notes synchronized");
+            return null;
         }
     }
 

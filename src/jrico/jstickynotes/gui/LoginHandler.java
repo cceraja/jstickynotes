@@ -1,6 +1,6 @@
 package jrico.jstickynotes.gui;
 
-import java.util.concurrent.CountDownLatch;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.SwingUtilities;
 
@@ -11,20 +11,22 @@ import jrico.jstickynotes.util.Pair;
 public class LoginHandler implements Runnable {
     private Preferences preferences;
     private Pair<String, String> credentials;
-    private CountDownLatch signal;
 
     public LoginHandler(Preferences preferences) {
         this.preferences = preferences;
     }
 
     public Pair<String, String> login() {
-        signal = new CountDownLatch(1);
-        SwingUtilities.invokeLater(this);
-
-        try {
-            signal.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (SwingUtilities.isEventDispatchThread()) {
+            run();
+        } else {
+            try {
+                SwingUtilities.invokeAndWait(this);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
         }
 
         return credentials;
@@ -34,6 +36,5 @@ public class LoginHandler implements Runnable {
     public void run() {
         credentials = LoginDialog.showDialog(JStickyNotes.getInstance().getFrame(), preferences.getUsername(),
             preferences.getPassword());
-        signal.countDown();
     }
 }
