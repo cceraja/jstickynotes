@@ -49,7 +49,6 @@ public class RemoteRepository implements NoteRepository {
 
     private Session session;
     private Store store;
-    private Folder folder;
 
     private String host = "imap.gmail.com";
     private String username = "";
@@ -64,12 +63,20 @@ public class RemoteRepository implements NoteRepository {
             try {
                 delete(note);
 
-                MimeMessage message = new MimeMessage(session);
-                String xml = XmlReaderWriter.writeObjectsToString(note, note.getCategories());
-                message.setSubject(String.valueOf(note.getId()));
-                message.setText(xml);
-                message.saveChanges();
-                folder.appendMessages(new Message[] { message });
+                Folder folder = store.getFolder(FOLDER_NAME);
+
+                try {
+                    folder.open(Folder.READ_WRITE);
+
+                    MimeMessage message = new MimeMessage(session);
+                    String xml = XmlReaderWriter.writeObjectsToString(note, note.getCategories());
+                    message.setSubject(String.valueOf(note.getId()));
+                    message.setText(xml);
+                    message.saveChanges();
+                    folder.appendMessages(new Message[] { message });
+                } finally {
+                    folder.close(true);
+                }
             } catch (Exception e) {
                 logger.throwing(this.getClass().getName(), "delete", e);
                 success = false;
@@ -89,22 +96,30 @@ public class RemoteRepository implements NoteRepository {
         boolean success = true;
         if (this.isConnected()) {
             try {
-                Message messages[] = folder.getMessages();
-                boolean deleted = false;
-                for (int i = 0; i < messages.length; i++) {
-                    Message message = messages[i];
-                    String subject = message.getSubject();
-                    if (subject != null && !subject.trim().equals("")) {
-                        long id = Long.parseLong(subject);
-                        if (id == note.getId()) {
-                            message.setFlag(Flag.DELETED, true);
-                            deleted = true;
+
+                Folder folder = store.getFolder(FOLDER_NAME);
+                try {
+                    folder.open(Folder.READ_WRITE);
+
+                    Message messages[] = folder.getMessages();
+                    boolean deleted = false;
+                    for (int i = 0; i < messages.length; i++) {
+                        Message message = messages[i];
+                        String subject = message.getSubject();
+                        if (subject != null && !subject.trim().equals("")) {
+                            long id = Long.parseLong(subject);
+                            if (id == note.getId()) {
+                                message.setFlag(Flag.DELETED, true);
+                                deleted = true;
+                            }
                         }
                     }
-                }
-                if (deleted) {
-                    Message[] deletedMsgs = folder.expunge();
-                    logger.log(Level.FINER, "deleted:", deletedMsgs);
+                    if (deleted) {
+                        Message[] deletedMsgs = folder.expunge();
+                        logger.log(Level.FINER, "deleted:", deletedMsgs);
+                    }
+                } finally {
+                    folder.close(true);
                 }
             } catch (Exception e) {
                 logger.throwing(this.getClass().getName(), "delete", e);
@@ -123,12 +138,20 @@ public class RemoteRepository implements NoteRepository {
         List<Note> notes = new ArrayList<Note>();
         if (this.isConnected()) {
             try {
-                Message messages[] = folder.getMessages();
-                for (int i = 0, n = messages.length; i < n; i++) {
-                    Note note = XmlReaderWriter.readObjectFromString(messages[i].getContent().toString());
-                    if (note != null) {
-                        notes.add(note);
+                Folder folder = store.getFolder(FOLDER_NAME);
+
+                try {
+                    folder.open(Folder.READ_WRITE);
+
+                    Message messages[] = folder.getMessages();
+                    for (int i = 0, n = messages.length; i < n; i++) {
+                        Note note = XmlReaderWriter.readObjectFromString(messages[i].getContent().toString());
+                        if (note != null) {
+                            notes.add(note);
+                        }
                     }
+                } finally {
+                    folder.close(true);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -159,17 +182,13 @@ public class RemoteRepository implements NoteRepository {
                 store.connect(host, username, password);
             }
 
-            // Get folder
-            if (folder == null) {
-                folder = store.getFolder(FOLDER_NAME);
+            Folder folder = store.getFolder(FOLDER_NAME);
 
-                if (!folder.exists()) {
-                    logger.finer("Creating folder " + Folder.HOLDS_MESSAGES + "on server.");
-                    folder.create(Folder.HOLDS_MESSAGES);
-                }
-                folder.open(Folder.READ_WRITE);
-                connected = true;
+            if (!folder.exists()) {
+                logger.finer("Creating folder " + Folder.HOLDS_MESSAGES + "on server.");
+                folder.create(Folder.HOLDS_MESSAGES);
             }
+            connected = true;
         } catch (Exception e) {
             logger.throwing(this.getClass().getName(), "openSession", e);
             turnOffline(e);
@@ -180,16 +199,12 @@ public class RemoteRepository implements NoteRepository {
     public void closeSession() {
         connected = false;
         try {
-            if (folder != null) {
-                folder.close(false);
-            }
             if (store != null) {
                 store.close();
             }
         } catch (Exception e) {
             logger.throwing(this.getClass().getName(), "closeSession", e);
         } finally {
-            folder = null;
             store = null;
             session = null;
         }
