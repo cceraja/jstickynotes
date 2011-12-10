@@ -107,7 +107,7 @@ public class Note extends Bean implements Serializable {
      * The base version for all new notes
      */
     public static final int INITIAL_VERSION = 0;
-   
+
     /**
      * The note's unique identifier.
      */
@@ -175,7 +175,7 @@ public class Note extends Bean implements Serializable {
     private List<String> categories;
 
     public Note() {
-    	version = INITIAL_VERSION;
+        version = INITIAL_VERSION;
     }
 
     /**
@@ -516,27 +516,25 @@ public class Note extends Bean implements Serializable {
     public int hashCode() {
         return (int) getId();
     }
-    
+
     /**
      * Compares two notes' version.
      * 
-     * @param note the note to be compared
-     * @return {@value 0} if they are the same version, less than {@value 0} if this note has a lower 
-      		version than the parameter note, or greater than {@value 0} if this note has a greater 
-      		version than the parameter note.
+     * @param note
+     *            the note to be compared
+     * @return 0} if they are the same version, less than 0} if this note has a lower version than the parameter note,
+     *         or greater than 0} if this note has a greater version than the parameter note.
      */
-    public int compareVersionTo(Note note){
-    	return this.getVersion() - note.getVersion();
+    public int compareVersionTo(Note note) {
+        return this.getVersion() - note.getVersion();
     }
-    
+
     @Override
-    public String toString(){
-    	return "[Note id=" + this.getId() + ", type=" + this.getType() 
-    			+ ", version=" + this.getVersion() + ", status=" + this.getStatus() 
-    			+ ", color=" + this.getColor() + ", relativeLocation=" + this.getRelativeLocation() 
-    			+ ", size=" + this.getSize() + ", visible=" + this.isVisible() + ", alwaysOnTop=" 
-    			+ this.isAlwaysOnTop() + ", font=" + this.getFont() + ", fontColor=" 
-    			+ this.getFontColor() +  ", text=" + this.getText() +  ", categories=" 
-    			+ this.getCategories() + "]";
+    public String toString() {
+        return "[Note id=" + this.getId() + ", type=" + this.getType() + ", version=" + this.getVersion() + ", status="
+                + this.getStatus() + ", color=" + this.getColor() + ", relativeLocation=" + this.getRelativeLocation()
+                + ", size=" + this.getSize() + ", visible=" + this.isVisible() + ", alwaysOnTop="
+                + this.isAlwaysOnTop() + ", font=" + this.getFont() + ", fontColor=" + this.getFontColor() + ", text="
+                + this.getText() + ", categories=" + this.getCategories() + "]";
     }
 }

@@ -48,7 +48,7 @@ public class LocalRepository implements NoteRepository {
     public boolean add(Note note) {
         String file = DIRECTORY + File.separator + note.getId();
         XmlReaderWriter.writeObjectsToFile(file, note, note.getCategories());
-        //TODO this shouldn't be returning always true, above code should throw exceptions
+        // TODO this shouldn't be returning always true, above code should throw exceptions
         return true;
     }
 
@@ -56,7 +56,7 @@ public class LocalRepository implements NoteRepository {
     public boolean delete(Note note) {
         File file = new File(DIRECTORY + File.separator + note.getId());
         if (file.exists()) {
-        	return file.delete();
+            return file.delete();
         }
         return true;
     }
@@ -76,9 +76,9 @@ public class LocalRepository implements NoteRepository {
 
     @Override
     public boolean update(Note note) {
-        if ( delete(note) ) {
-        	return add(note);
+        if (delete(note)) {
+            return add(note);
         }
-    	return false;
+        return false;
     }
 }
