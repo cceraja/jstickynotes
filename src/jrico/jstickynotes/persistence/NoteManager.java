@@ -298,12 +298,11 @@ public class NoteManager implements PropertyChangeListener {
                     } else if (note.getStatus() == Note.DELETED_STATUS) {
                         logger.finer("status=DELETED");
                         notes.remove(note);
-                        if (remoteRepository.delete(note)) {
-                            // delete from local only if it was successfully deleted from remote
+
+                        if ((note.getType() == Note.LOCAL_TYPE)
+                                || (note.getType() == Note.REMOTE_TYPE && remoteRepository.isConnected() && remoteRepository
+                                    .delete(note))) {
                             localRepository.delete(note);
-                        }
-                        if (note.getType() == Note.REMOTE_TYPE && remoteRepository.isConnected()) {
-                            remoteRepository.delete(note);
                         }
                     } else if (note.getStatus() == Note.LOCAL_OUTDATED_STATUS) {
                         logger.finer("status=LOCAL_OUTDATED");
