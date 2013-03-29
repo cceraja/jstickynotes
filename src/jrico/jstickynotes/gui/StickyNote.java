@@ -114,7 +114,6 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
         setSize(note.getSize());
         setAlwaysOnTop(note.isAlwaysOnTop());
         setLocationRelativeTo(null);
-        setLocation(Screen.getLocation(note));
         setVisible(note.isVisible());
     }
 
@@ -148,6 +147,16 @@ public class StickyNote extends JWindow implements PropertyChangeListener {
     @Override
     public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         super.firePropertyChange(propertyName, oldValue, newValue);
+    }
+
+    @Override
+    public void setVisible(boolean visible) {
+        if (visible) {
+            setLocation(0, 0);
+            setLocation(Screen.getLocation(note));
+        }
+
+        super.setVisible(visible);
     }
 
     private void processTextEvents(PropertyChangeEvent pce) {
