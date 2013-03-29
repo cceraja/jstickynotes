@@ -68,7 +68,7 @@ public class Classes {
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T> T invokeMethod(Object object, String name, int searchMode, Object... parameters) {
+    public static <T> T invokeMethod(Object object, String name, Integer searchMode, Object... parameters) {
         Method method = getMethod(object.getClass(), name, searchMode, getTypes(parameters));
         return (T) invokeMethod(object, method, parameters);
     }
